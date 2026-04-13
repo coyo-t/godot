@@ -1219,6 +1219,8 @@ if env["tests"]:
     SConscript("tests/SCsub")
 SConscript("main/SCsub")
 
+SConscript("coyote/SCsub")
+
 SConscript("platform/" + env["platform"] + "/SCsub")  # Build selected platform.
 
 # Microsoft Visual Studio Project Generation

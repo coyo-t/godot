@@ -78,6 +78,8 @@
 #include "servers/text/text_server.h"
 #include "servers/text/text_server_dummy.h"
 
+#include "coyote/register_tha_coyote_typez.h"
+
 // 2D
 #ifndef NAVIGATION_2D_DISABLED
 #include "servers/navigation_2d/navigation_server_2d.h"
@@ -3732,6 +3734,12 @@ Error Main::setup2(bool p_show_boot_logo) {
 
 	register_server_singletons();
 
+	// here so i can ctrl+f this giant fuckass file
+	// COYOTEZ FBE FUNNY BLOCK GAME ENGINE TZEGRTY FPW
+
+	register_tha_coyote_typez(0);
+	register_tha_coyote_typez(2);
+
 	// This loads global classes, so it must happen before custom loaders and savers are registered
 	ScriptServer::init_languages();
 
@@ -5162,6 +5170,10 @@ void Main::cleanup(bool p_force) {
 
 	GDExtensionManager::get_singleton()->deinitialize_extensions(GDExtension::INITIALIZATION_LEVEL_SCENE);
 	uninitialize_modules(MODULE_INITIALIZATION_LEVEL_SCENE);
+
+	// here so i can ctrl+f this giant fuckass file
+	// COYOTEZ FBE FUNNY BLOCK GAME ENGINE TZEGRTY FPW
+	register_tha_coyote_typez(1);
 
 	unregister_platform_apis();
 	unregister_driver_types();
