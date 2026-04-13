@@ -61,6 +61,8 @@ class RenderingDevice : public RenderingDeviceCommons {
 
 	_THREAD_SAFE_CLASS_
 
+	public:
+
 private:
 	Thread::ID render_thread_id;
 

@@ -30,6 +30,8 @@
 
 #include "rendering_device_graph.h"
 
+// #include "rendering_device.h"
+
 #define PRINT_RENDER_GRAPH 0
 #define FORCE_FULL_ACCESS_BITS 0
 #define PRINT_RESOURCE_TRACKER_TOTAL 0

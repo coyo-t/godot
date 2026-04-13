@@ -5984,6 +5984,8 @@ void RenderingDevice::_release_transfer_worker(TransferWorker *p_transfer_worker
 	transfer_worker_pool_condition.notify_one();
 }
 
+
+// FUCK YOU
 void RenderingDevice::_end_transfer_worker(TransferWorker *p_transfer_worker) {
 	driver->command_buffer_end(p_transfer_worker->command_buffer);
 	p_transfer_worker->recording = false;

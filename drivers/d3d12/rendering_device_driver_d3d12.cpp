@@ -62,12 +62,14 @@ GODOT_MSVC_WARNING_IGNORE(4806) // "'&': unsafe operation: no value of type 'boo
 #define D3D12MA_D3D12_HEADERS_ALREADY_INCLUDED
 #include <thirdparty/d3d12ma/D3D12MemAlloc.h>
 
+
 #include <nir_spirv.h>
 #include <nir_to_dxil.h>
 #include <spirv_to_dxil.h>
 extern "C" {
-#include <dxil_spirv_nir.h>
+	#include <dxil_spirv_nir.h>
 }
+
 
 GODOT_GCC_WARNING_POP
 GODOT_CLANG_WARNING_POP
@@ -2680,12 +2682,12 @@ void RenderingDeviceDriverD3D12::command_buffer_end(CommandBufferID p_cmd_buffer
 	CommandBufferInfo *cmd_buf_info = (CommandBufferInfo *)p_cmd_buffer.id;
 	HRESULT res = cmd_buf_info->cmd_list->Close();
 
-	ERR_FAIL_COND_MSG(!SUCCEEDED(res), "Close failed with error " + vformat("0x%08ux", (uint64_t)res) + ".");
 	cmd_buf_info->graphics_pso = nullptr;
 	cmd_buf_info->graphics_root_signature_crc = 0;
 	cmd_buf_info->compute_pso = nullptr;
 	cmd_buf_info->compute_root_signature_crc = 0;
 	cmd_buf_info->descriptor_heaps_set = false;
+	ERR_FAIL_COND_MSG(!SUCCEEDED(res), "Close failed with error " + vformat("0x%08ux", (uint64_t)res) + ".");
 }
 
 void RenderingDeviceDriverD3D12::command_buffer_execute_secondary(CommandBufferID p_cmd_buffer, VectorView<CommandBufferID> p_secondary_cmd_buffers) {
