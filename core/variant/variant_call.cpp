@@ -1068,75 +1068,77 @@ struct _VariantCall {
 		return dest;
 	}
 
-	static void func_PackedByteArray_encode_u8(PackedByteArray *p_instance, int64_t p_offset, int64_t p_value) {
+	static int64_t func_PackedByteArray_encode_u8(PackedByteArray *p_instance, int64_t p_offset, int64_t p_value) {
 		uint64_t size = p_instance->size();
-		ERR_FAIL_COND(p_offset < 0 || p_offset > int64_t(size) - 1);
+		ERR_FAIL_COND_V(p_offset < 0 || p_offset > int64_t(size) - 1, 0);
 		uint8_t *w = p_instance->ptrw();
 		*((uint8_t *)&w[p_offset]) = p_value;
+		return 1;
 	}
-	static void func_PackedByteArray_encode_s8(PackedByteArray *p_instance, int64_t p_offset, int64_t p_value) {
+	static int64_t func_PackedByteArray_encode_s8(PackedByteArray *p_instance, int64_t p_offset, int64_t p_value) {
 		uint64_t size = p_instance->size();
-		ERR_FAIL_COND(p_offset < 0 || p_offset > int64_t(size) - 1);
+		ERR_FAIL_COND_V(p_offset < 0 || p_offset > int64_t(size) - 1, 0);
 		uint8_t *w = p_instance->ptrw();
 		*((int8_t *)&w[p_offset]) = p_value;
+		return 1;
 	}
 
-	static void func_PackedByteArray_encode_u16(PackedByteArray *p_instance, int64_t p_offset, int64_t p_value) {
+	static int64_t func_PackedByteArray_encode_u16(PackedByteArray *p_instance, int64_t p_offset, int64_t p_value) {
 		uint64_t size = p_instance->size();
-		ERR_FAIL_COND(p_offset < 0 || p_offset > int64_t(size) - 2);
+		ERR_FAIL_COND_V(p_offset < 0 || p_offset > int64_t(size) - 2, 0);
 		uint8_t *w = p_instance->ptrw();
-		encode_uint16((uint16_t)p_value, &w[p_offset]);
+		return encode_uint16((uint16_t)p_value, &w[p_offset]);
 	}
-	static void func_PackedByteArray_encode_s16(PackedByteArray *p_instance, int64_t p_offset, int64_t p_value) {
+	static int64_t func_PackedByteArray_encode_s16(PackedByteArray *p_instance, int64_t p_offset, int64_t p_value) {
 		uint64_t size = p_instance->size();
-		ERR_FAIL_COND(p_offset < 0 || p_offset > int64_t(size) - 2);
+		ERR_FAIL_COND_V(p_offset < 0 || p_offset > int64_t(size) - 2, 0);
 		uint8_t *w = p_instance->ptrw();
-		encode_uint16((int16_t)p_value, &w[p_offset]);
-	}
-
-	static void func_PackedByteArray_encode_u32(PackedByteArray *p_instance, int64_t p_offset, int64_t p_value) {
-		uint64_t size = p_instance->size();
-		ERR_FAIL_COND(p_offset < 0 || p_offset > int64_t(size) - 4);
-		uint8_t *w = p_instance->ptrw();
-		encode_uint32((uint32_t)p_value, &w[p_offset]);
-	}
-	static void func_PackedByteArray_encode_s32(PackedByteArray *p_instance, int64_t p_offset, int64_t p_value) {
-		uint64_t size = p_instance->size();
-		ERR_FAIL_COND(p_offset < 0 || p_offset > int64_t(size) - 4);
-		uint8_t *w = p_instance->ptrw();
-		encode_uint32((int32_t)p_value, &w[p_offset]);
+		return encode_uint16((int16_t)p_value, &w[p_offset]);
 	}
 
-	static void func_PackedByteArray_encode_u64(PackedByteArray *p_instance, int64_t p_offset, int64_t p_value) {
+	static int64_t func_PackedByteArray_encode_u32(PackedByteArray *p_instance, int64_t p_offset, int64_t p_value) {
 		uint64_t size = p_instance->size();
-		ERR_FAIL_COND(p_offset < 0 || p_offset > int64_t(size) - 8);
+		ERR_FAIL_COND_V(p_offset < 0 || p_offset > int64_t(size) - 4, 0);
 		uint8_t *w = p_instance->ptrw();
-		encode_uint64((uint64_t)p_value, &w[p_offset]);
+		return encode_uint32((uint32_t)p_value, &w[p_offset]);
 	}
-	static void func_PackedByteArray_encode_s64(PackedByteArray *p_instance, int64_t p_offset, int64_t p_value) {
+	static int64_t func_PackedByteArray_encode_s32(PackedByteArray *p_instance, int64_t p_offset, int64_t p_value) {
 		uint64_t size = p_instance->size();
-		ERR_FAIL_COND(p_offset < 0 || p_offset > int64_t(size) - 8);
+		ERR_FAIL_COND_V(p_offset < 0 || p_offset > int64_t(size) - 4, 0);
 		uint8_t *w = p_instance->ptrw();
-		encode_uint64((int64_t)p_value, &w[p_offset]);
+		return encode_uint32((int32_t)p_value, &w[p_offset]);
 	}
 
-	static void func_PackedByteArray_encode_half(PackedByteArray *p_instance, int64_t p_offset, double p_value) {
+	static int64_t func_PackedByteArray_encode_u64(PackedByteArray *p_instance, int64_t p_offset, int64_t p_value) {
 		uint64_t size = p_instance->size();
-		ERR_FAIL_COND(p_offset < 0 || p_offset > int64_t(size) - 2);
+		ERR_FAIL_COND_V(p_offset < 0 || p_offset > int64_t(size) - 8, 0);
 		uint8_t *w = p_instance->ptrw();
-		encode_uint16(Math::make_half_float(p_value), &w[p_offset]);
+		return encode_uint64((uint64_t)p_value, &w[p_offset]);
 	}
-	static void func_PackedByteArray_encode_float(PackedByteArray *p_instance, int64_t p_offset, double p_value) {
+	static int64_t func_PackedByteArray_encode_s64(PackedByteArray *p_instance, int64_t p_offset, int64_t p_value) {
 		uint64_t size = p_instance->size();
-		ERR_FAIL_COND(p_offset < 0 || p_offset > int64_t(size) - 4);
+		ERR_FAIL_COND_V(p_offset < 0 || p_offset > int64_t(size) - 8, 0);
 		uint8_t *w = p_instance->ptrw();
-		encode_float(p_value, &w[p_offset]);
+		return encode_uint64((int64_t)p_value, &w[p_offset]);
 	}
-	static void func_PackedByteArray_encode_double(PackedByteArray *p_instance, int64_t p_offset, double p_value) {
+
+	static int64_t func_PackedByteArray_encode_half(PackedByteArray *p_instance, int64_t p_offset, double p_value) {
 		uint64_t size = p_instance->size();
-		ERR_FAIL_COND(p_offset < 0 || p_offset > int64_t(size) - 8);
+		ERR_FAIL_COND_V(p_offset < 0 || p_offset > int64_t(size) - 2, 0);
 		uint8_t *w = p_instance->ptrw();
-		encode_double(p_value, &w[p_offset]);
+		return encode_uint16(Math::make_half_float(p_value), &w[p_offset]);
+	}
+	static int64_t func_PackedByteArray_encode_float(PackedByteArray *p_instance, int64_t p_offset, double p_value) {
+		uint64_t size = p_instance->size();
+		ERR_FAIL_COND_V(p_offset < 0 || p_offset > int64_t(size) - 4, 0);
+		uint8_t *w = p_instance->ptrw();
+		return encode_float(p_value, &w[p_offset]);
+	}
+	static int64_t func_PackedByteArray_encode_double(PackedByteArray *p_instance, int64_t p_offset, double p_value) {
+		uint64_t size = p_instance->size();
+		ERR_FAIL_COND_V(p_offset < 0 || p_offset > int64_t(size) - 8, 0);
+		uint8_t *w = p_instance->ptrw();
+		return encode_double(p_value, &w[p_offset]);
 	}
 	static int64_t func_PackedByteArray_encode_var(PackedByteArray *p_instance, int64_t p_offset, const Variant &p_value, bool p_allow_objects) {
 		uint64_t size = p_instance->size();
