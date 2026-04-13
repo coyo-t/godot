@@ -1217,9 +1217,9 @@ SConscript("platform/SCsub")
 SConscript("modules/SCsub")
 if env["tests"]:
     SConscript("tests/SCsub")
+SConscript("coyote/SCsub")
 SConscript("main/SCsub")
 
-SConscript("coyote/SCsub")
 
 SConscript("platform/" + env["platform"] + "/SCsub")  # Build selected platform.
 
