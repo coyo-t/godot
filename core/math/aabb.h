@@ -128,6 +128,16 @@ struct [[nodiscard]] AABB {
 		return position + size;
 	}
 
+	_FORCE_INLINE_ void set_start(const Vector3 &p_start) {
+		const auto pev = position;
+		position = p_start;
+		size += pev-position;
+	}
+
+	_FORCE_INLINE_ Vector3 get_start() const {
+		return position;
+	}
+
 	_FORCE_INLINE_ Vector3 get_center() const {
 		return position + (size * 0.5f);
 	}
