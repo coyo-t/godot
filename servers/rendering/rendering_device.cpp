@@ -815,7 +815,7 @@ void RenderingDevice::buffer_flush(RID p_buffer) {
 }
 
 RID RenderingDevice::storage_buffer_create(uint32_t p_size_bytes, Span<uint8_t> p_data, BitField<StorageBufferUsage> p_usage, BitField<BufferCreationBits> p_creation_bits) {
-	ERR_FAIL_COND_V((0 < p_data.size()) && (uint32_t)p_data.size() > p_size_bytes, RID());
+	ERR_FAIL_COND_V((0 < p_data.size()) && (uint32_t)p_data.size() < p_size_bytes, RID());
 
 	Buffer buffer;
 	buffer.size = p_size_bytes;
@@ -3169,7 +3169,7 @@ bool RenderingDevice::sampler_is_format_supported_for_filter(DataFormat p_format
 /***********************/
 
 RID RenderingDevice::vertex_buffer_create(uint32_t p_size_bytes, Span<uint8_t> p_data, BitField<BufferCreationBits> p_creation_bits) {
-	ERR_FAIL_COND_V((0 < p_data.size()) && (uint32_t)p_data.size() > p_size_bytes, RID());
+	ERR_FAIL_COND_V((0 < p_data.size()) && (uint32_t)p_data.size() < p_size_bytes, RID());
 
 	Buffer buffer;
 	buffer.size = p_size_bytes;
@@ -3621,7 +3621,7 @@ uint64_t RenderingDevice::shader_get_vertex_input_attribute_mask(RID p_shader) {
 /******************/
 
 RID RenderingDevice::uniform_buffer_create(uint32_t p_size_bytes, Span<uint8_t> p_data, BitField<BufferCreationBits> p_creation_bits) {
-	ERR_FAIL_COND_V((0 < p_data.size()) && (uint32_t)p_data.size() > p_size_bytes, RID());
+	ERR_FAIL_COND_V((0 < p_data.size()) && (uint32_t)p_data.size() < p_size_bytes, RID());
 
 	Buffer buffer;
 	buffer.size = p_size_bytes;
