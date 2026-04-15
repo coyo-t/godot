@@ -2770,6 +2770,7 @@ GDScriptParser::ExpressionNode *GDScriptParser::parse_precedence(Precedence p_pr
 			// case GDScriptTokenizer::Token::BRACE_OPEN: // Not an infix operator.
 			case GDScriptTokenizer::Token::PARENTHESIS_OPEN:
 			case GDScriptTokenizer::Token::BRACKET_OPEN:
+			case GDScriptTokenizer::Token::BRACKET_CARROT_OPEN:
 				push_multiline(true);
 				break;
 			default:
@@ -4288,6 +4289,7 @@ GDScriptParser::ParseRule *GDScriptParser::get_rule(GDScriptTokenizer::Token::Ty
 		{ &GDScriptParser::parse_yield,                     nullptr,                                        PREC_NONE }, // YIELD,
 		// Punctuation
 		{ &GDScriptParser::parse_array,                  	&GDScriptParser::parse_subscript,            	PREC_SUBSCRIPT }, // BRACKET_OPEN,
+		{ nullptr,                                         &GDScriptParser::parse_subscript,            	PREC_SUBSCRIPT }, // COYOTE,
 		{ nullptr,                                          nullptr,                                        PREC_NONE }, // BRACKET_CLOSE,
 		{ &GDScriptParser::parse_dictionary,             	nullptr,                                        PREC_NONE }, // BRACE_OPEN,
 		{ nullptr,                                          nullptr,                                        PREC_NONE }, // BRACE_CLOSE,

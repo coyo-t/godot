@@ -125,6 +125,7 @@ static const char *token_names[] = {
 	"yield", // YIELD,
 	// Punctuation
 	"[", // BRACKET_OPEN,
+	"[^", // COYOTE
 	"]", // BRACKET_CLOSE,
 	"{", // BRACE_OPEN,
 	"}", // BRACE_CLOSE,
@@ -337,10 +338,23 @@ void GDScriptTokenizerText::push_paren(char32_t p_char) {
 	paren_stack.push_back(p_char);
 }
 
+auto GDScriptTokenizerText::peek_paren () -> char32_t {
+	if (paren_stack.is_empty()) {
+		return 0;
+	}
+	return paren_stack.back()->get();
+}
+
 bool GDScriptTokenizerText::pop_paren(char32_t p_expected) {
 	if (paren_stack.is_empty()) {
 		return false;
 	}
+	if (p_expected == 0)
+	{
+		paren_stack.pop_back();
+		return true;
+	}
+
 	char32_t actual = paren_stack.back()->get();
 	paren_stack.pop_back();
 
@@ -1463,8 +1477,18 @@ GDScriptTokenizer::Token GDScriptTokenizerText::scan() {
 			push_paren('(');
 			return make_token(Token::PARENTHESIS_OPEN);
 		case '[':
-			push_paren('[');
-			return make_token(Token::BRACKET_OPEN);
+			if (_peek() == '^')
+			{
+				push_paren('^');
+				_advance();
+				// return make_token(Token::BRACKET_OPEN);
+				return make_token(Token::BRACKET_CARROT_OPEN);
+			}
+			else
+			{
+				push_paren('[');
+				return make_token(Token::BRACKET_OPEN);
+			}
 		case '{':
 			push_paren('{');
 			return make_token(Token::BRACE_OPEN);
@@ -1474,10 +1498,17 @@ GDScriptTokenizer::Token GDScriptTokenizerText::scan() {
 			}
 			return make_token(Token::PARENTHESIS_CLOSE);
 		case ']':
-			if (!pop_paren('[')) {
-				return make_paren_error(c);
+			if (peek_paren() == '^')
+			{
+				pop_paren(0);
+				return make_token(Token::BRACKET_CLOSE);
 			}
-			return make_token(Token::BRACKET_CLOSE);
+			if (peek_paren() == '[')
+			{
+				pop_paren(0);
+				return make_token(Token::BRACKET_CLOSE);
+			}
+			return make_paren_error(c);
 		case '}':
 			if (!pop_paren('{')) {
 				return make_paren_error(c);

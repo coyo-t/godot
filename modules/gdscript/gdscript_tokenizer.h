@@ -130,6 +130,9 @@ public:
 			YIELD,
 			// Punctuation
 			BRACKET_OPEN,
+			// COYOTE
+			BRACKET_CARROT_OPEN,
+			
 			BRACKET_CLOSE,
 			BRACE_OPEN,
 			BRACE_CLOSE,
@@ -280,6 +283,7 @@ class GDScriptTokenizerText : public GDScriptTokenizer {
 	Token check_vcs_marker(char32_t p_test, Token::Type p_double_type);
 	void push_paren(char32_t p_char);
 	bool pop_paren(char32_t p_expected);
+	char32_t peek_paren();
 
 	void newline(bool p_make_token);
 	Token number();
