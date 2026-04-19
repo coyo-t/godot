@@ -1103,7 +1103,8 @@ static const char *_op_names[Variant::OP_MAX] = {
 	"or",
 	"xor",
 	"not",
-	"in"
+	"??",
+	"in",
 };
 
 String Variant::get_operator_name(Operator p_op) {

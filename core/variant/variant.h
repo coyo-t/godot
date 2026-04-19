@@ -612,6 +612,9 @@ public:
 		OP_NOT,
 		//containment
 		OP_IN,
+		// TODO: coersion
+		OP_NULL_COERSION,
+		// end
 		OP_MAX
 
 	};
