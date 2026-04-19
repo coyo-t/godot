@@ -89,7 +89,7 @@ ChunkSpacer::~ChunkSpacer()
 
 auto ChunkSpacer::getAdjacentCoord(int i, int cardinal) const -> int
 {
-	ERR_FAIL_COND(innerAdjacency == nullptr);
+	ERR_FAIL_COND_V(innerAdjacency == nullptr, 0);
 	ERR_FAIL_INDEX_V_MSG(cardinal, 6, 0, "cardinal out of range");
 	ERR_FAIL_INDEX_V_MSG(i, innerCount, 0, "inner index out of bounds");
 	return innerAdjacency[i*6+cardinal];
@@ -97,7 +97,7 @@ auto ChunkSpacer::getAdjacentCoord(int i, int cardinal) const -> int
 
 auto ChunkSpacer::getOrderCoord(int i) const -> Vector3i
 {
-	ERR_FAIL_COND(innerOrder == nullptr);
+	ERR_FAIL_COND_V(innerOrder == nullptr, Vector3i());
 	ERR_FAIL_INDEX_V(i, innerCount, Vector3i());
 	return innerOrder[i];
 }
@@ -205,15 +205,6 @@ auto ChunkSpacer::_bind_methods() -> void
 		PropertyInfo(Variant::INT, "component_bit_count"),
 		"",
 		"get_component_bit_count"
-	);
-	ClassDB::bind_method(
-		D_METHOD("get_component_mask"),
-		&ChunkSpacer::gd_get_component_mask
-	);
-	ADD_PROPERTY(
-		PropertyInfo(Variant::INT, "component_mask"),
-		"",
-		"get_component_mask"
 	);
 	ClassDB::bind_method(
 		D_METHOD("get_component_mask"),
