@@ -30,7 +30,8 @@ class ChunkSpacer : public RefCounted {
 
 	Vector3i* innerOrder = nullptr;
 	int64_t* innerAdjacency = nullptr;
-	
+	uint64_t* shellPoints = nullptr;
+
 	public:
 	auto resize (int to) -> void;
 
@@ -73,6 +74,16 @@ class ChunkSpacer : public RefCounted {
 		);
 	}
 
+	_FORCE_INLINE_ auto vectorIsShellPoint (const Vector3i& v) const -> bool {
+		return !(
+			(0 < v.x && v.x < (size-1)) &&
+			(0 < v.y && v.y < (size-1)) &&
+			(0 < v.z && v.z < (size-1))
+		);
+	}
+
+	auto isShellPoint (int i) const -> bool;
+
 	auto gd_get_inner_count () const -> uint64_t;
 	auto gd_get_size () const -> int;
 	auto gd_get_size_po2 () const -> int;
@@ -81,7 +92,7 @@ class ChunkSpacer : public RefCounted {
 	auto gd_get_component_offset () const -> Vector3i;
 	auto gd_get_component_total_mask () const -> uint64_t;
 
-
+	auto freeBuffers () -> void;
 	
 	ChunkSpacer();
 	~ChunkSpacer();

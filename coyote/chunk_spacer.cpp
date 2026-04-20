@@ -3,6 +3,19 @@
 #include<core/os/memory.h>
 #include<core/variant/variant.h>
 
+_ALWAYS_INLINE_
+static auto freeIfNotNull (void* p) -> void {
+	if (p != nullptr)
+		memfree(p);
+}
+
+template<typename T>
+_ALWAYS_INLINE_
+auto allocThaThing (uint64_t count) -> T*
+{
+	return static_cast<T*>(memalloc(sizeof(T) * innerCount))
+}
+
 auto ChunkSpacer::resize (int to) -> void
 {
 	int biti = -1;
@@ -16,7 +29,6 @@ auto ChunkSpacer::resize (int to) -> void
 	}
 	// arbitrary
 	ERR_FAIL_COND(0 > biti || biti >= 8);
-
 
 	uint64_t bitc = 1 << biti;
 	uint64_t bitmask = (1 << biti) - 1;
@@ -34,23 +46,23 @@ auto ChunkSpacer::resize (int to) -> void
 	maxMask = (bitmask<<cxOffset)|(bitmask<<cyOffset)|(bitmask<<czOffset);
 	inverseMaxMask = ~maxMask;
 	
-	if (innerOrder != nullptr)
-	{
-		memfree(innerOrder);
-	}
-	if (innerAdjacency != nullptr)
-	{
-		memfree(innerAdjacency);
-	}
+	freeBuffers();
 
 	innerCount = bitc * bitc * bitc;
-	Vector3i* order = static_cast<Vector3i*>(memalloc(sizeof(Vector3i) * innerCount));
-	int64_t* adjacency = static_cast<int64_t*>(memalloc(sizeof(int64_t) * innerCount * 6));
+	const auto bitflagsCount = ((innerCount-1)>>6)+1;
+	auto* order = allocThaThing<Vector3i>(innerCount);
+	auto* adjacency = allocThaThing<int64_t>(innerCount * 6);
+	auto* isshell = allocThaThing<uint64_t>(bitflagsCount);
 
 	for (auto i = 0; i < innerCount; i++)
 	{
 		auto v = decodeLocalVector(i);
 		order[i] = v;
+		if (vectorIsShellPoint(v))
+		{
+			isshell[i >> 6] |= (1 << (i & 63));
+		}
+
 		for (auto j = 0; j < 6; j++)
 		{
 			auto ofs = v + cardinals[j];
@@ -69,6 +81,7 @@ auto ChunkSpacer::resize (int to) -> void
 	
 	innerOrder = order;
 	innerAdjacency = adjacency;
+	shellPoints = isshell;
 }
 
 ChunkSpacer::ChunkSpacer()
@@ -77,14 +90,7 @@ ChunkSpacer::ChunkSpacer()
 
 ChunkSpacer::~ChunkSpacer()
 {
-	if (innerAdjacency != nullptr)
-	{
-		memfree(innerAdjacency);
-	}
-	if (innerOrder != nullptr)
-	{
-		memfree(innerOrder);
-	}
+	freeBuffers();
 }
 
 auto ChunkSpacer::getAdjacentCoord(int i, int cardinal) const -> int
@@ -106,6 +112,12 @@ auto ChunkSpacer::setCardinal(int index, const Vector3i& v) -> void
 {
 	ERR_FAIL_INDEX(index, 6);
 	cardinals[index] = v;
+}
+
+auto ChunkSpacer::isShellPoint(int i) const -> bool
+{
+	ERR_FAIL_INDEX_V(i, innerCount, false);
+	return (shellPoints[i >> 6] & (1 << (i&63))) != 0;
 }
 
 auto ChunkSpacer::gd_get_inner_count() const -> uint64_t
@@ -143,6 +155,13 @@ auto ChunkSpacer::gd_get_component_total_mask() const -> uint64_t
 	return maxMask;
 }
 
+auto ChunkSpacer::freeBuffers() -> void
+{
+	freeIfNotNull(innerOrder);
+	freeIfNotNull(innerAdjacency);
+	freeIfNotNull(shellPoints);
+}
+
 auto ChunkSpacer::_bind_methods() -> void
 {
 	ClassDB::bind_method(
@@ -160,6 +179,15 @@ auto ChunkSpacer::_bind_methods() -> void
 	ClassDB::bind_method(
 		D_METHOD("get_inner_vector", "inner_index"),
 		&ChunkSpacer::getOrderCoord
+	);
+
+	ClassDB::bind_method(
+		D_METHOD("vector_is_shell_point", "v"),
+		&ChunkSpacer::vectorIsShellPoint
+	);
+	ClassDB::bind_method(
+		D_METHOD("is_shell_point", "i"),
+		&ChunkSpacer::isShellPoint
 	);
 
 	ClassDB::bind_method(
