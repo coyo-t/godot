@@ -636,6 +636,14 @@ double VariantUtilityFunctions::wrapf(double value, double min, double max) {
 	return Math::wrapf(value, min, max);
 }
 
+Vector3 VariantUtilityFunctions::wrapv3 (const Vector3& value, const Vector3& min, const Vector3& max) {
+	return Vector3(
+		Math::wrapf(value.x, min.x, max.x),
+		Math::wrapf(value.y, min.y, max.y),
+		Math::wrapf(value.z, min.z, max.z)
+	);
+}
+
 double VariantUtilityFunctions::pingpong(double value, double length) {
 	return Math::pingpong(value, length);
 }
@@ -1716,6 +1724,7 @@ void Variant::_register_variant_utility_functions() {
 	FUNCBINDVR3(wrap, sarray("value", "min", "max"), Variant::UTILITY_FUNC_TYPE_MATH);
 	FUNCBINDR(wrapi, sarray("value", "min", "max"), Variant::UTILITY_FUNC_TYPE_MATH);
 	FUNCBINDR(wrapf, sarray("value", "min", "max"), Variant::UTILITY_FUNC_TYPE_MATH);
+	FUNCBINDR(wrapv3, sarray("value", "min", "max"), Variant::UTILITY_FUNC_TYPE_MATH);
 
 	FUNCBINDVARARG(max, sarray(), Variant::UTILITY_FUNC_TYPE_MATH);
 	FUNCBINDR(maxi, sarray("a", "b"), Variant::UTILITY_FUNC_TYPE_MATH);

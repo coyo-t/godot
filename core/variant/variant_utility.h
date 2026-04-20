@@ -103,6 +103,7 @@ struct VariantUtilityFunctions {
 	static Variant wrap(const Variant &p_x, const Variant &p_min, const Variant &p_max, Callable::CallError &r_error);
 	static int64_t wrapi(int64_t value, int64_t min, int64_t max);
 	static double wrapf(double value, double min, double max);
+	static Vector3 wrapv3(const Vector3& value, const Vector3& min, const Vector3& max);
 	static double pingpong(double value, double length);
 	static Variant max(const Variant **p_args, int p_argcount, Callable::CallError &r_error);
 	static double maxf(double x, double y);
