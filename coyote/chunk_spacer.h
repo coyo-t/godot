@@ -5,6 +5,7 @@
 #include<core/object/class_db.h>
 #include<core/object/ref_counted.h>
 #include<core/typedefs.h>
+#include<core/templates/vector.h>
 
 class ChunkSpacer : public RefCounted {
 	GDCLASS(ChunkSpacer, RefCounted);
@@ -48,7 +49,7 @@ class ChunkSpacer : public RefCounted {
 	}
 
 	_FORCE_INLINE_ auto encodeLocalVector (const Vector3i& v) const -> int {
-		return ((v.x<<cxOffset)|(v.y<<cyOffset)|(v.z<<czOffset)) & maxMask;
+		return (((v.x&componentMask)<<cxOffset)|((v.y&componentMask)<<cyOffset)|((v.z&componentMask)<<czOffset));
 	}
 
 	_FORCE_INLINE_ auto decodeLocalVector (int i) const -> Vector3i {
