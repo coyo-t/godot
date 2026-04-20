@@ -13,7 +13,7 @@ template<typename T>
 _ALWAYS_INLINE_
 auto allocThaThing (uint64_t count) -> T*
 {
-	return static_cast<T*>(memalloc(sizeof(T) * innerCount))
+	return static_cast<T*>(memalloc(sizeof(T) * count));
 }
 
 auto ChunkSpacer::resize (int to) -> void
