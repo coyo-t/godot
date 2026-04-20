@@ -68,15 +68,8 @@ constexpr FaceIndex FACE_INDICES[] = {
 	{ 0,5, 3,2, 4, 0,1,0 },
 };
 
-auto CubeModelBuilder::createFace (
-	int cardinal,
-	TypedArray<Vector3> intov,
-	TypedArray<Vector2> intou,
-	TypedArray<Vector3> inton,
-	TypedArray<int32_t> intoi
-) -> bool
+auto CubeModelBuilder::createFace (int cardinal) -> bool
 {
-
 	const auto bb = bbox.abs();
 	const auto bbp = bb.get_position();
 	const auto bbe = bb.get_end();
@@ -113,8 +106,7 @@ auto CubeModelBuilder::createFace (
 	auto depth = corners[faceData.depth] + ((faceData.zNeg==0) ? faceOffset : -faceOffset);
 	auto trans = FACE_TRANSFORMS[cardinal].translated(cornerPostOffset);
 	auto ntrans = trans.basis.orthonormalized();
-	auto n = ntrans.xform(FACE_NORMALS[cardinal]);
-	
+
 	auto uv0 = Vector2 {
 		q0.x,
 		1-q1.y,
@@ -123,7 +115,6 @@ auto CubeModelBuilder::createFace (
 		q1.x,
 		1-q0.y,
 	};
-	vNormal = n;
 	vVertices[0] = trans.xform(Vector3(q0.x, q0.y, depth));
 	vVertices[1] = trans.xform(Vector3(q0.x, q1.y, depth));
 	vVertices[2] = trans.xform(Vector3(q1.x, q1.y, depth));
@@ -134,12 +125,8 @@ auto CubeModelBuilder::createFace (
 	vUVs[3] = { uv1.x, uv1.y };
 	vIndices[0] = { 0, 1, 2 };
 	vIndices[1] = { 0, 2, 3 };
-	// inton.append_array({n,n,n,n});
-	// intov.append_array({vVertices[0],vVertices[1],vVertices[2],vVertices[3]});
-	// intou.append_array({vUVs[0],vUVs[1],vUVs[2],vUVs[3]});
-	// intoi.append_array({0, 1, 2, 0, 2, 3});
 	newVertexCount = 4;
-	newIndexCount = 6;
+	newIndexCount = 2;
 	return true;
 }
 
@@ -205,12 +192,6 @@ auto CubeModelBuilder::vGetVertex(int i) const -> Vector3
 	return vVertices[i];
 }
 
-auto CubeModelBuilder::vGetNormal(int i) const -> Vector3
-{
-	ERR_FAIL_INDEX_V(i, 4, Vector3());
-	return vNormal;
-}
-
 auto CubeModelBuilder::vGetUVs(int i) const -> Vector2
 {
 	ERR_FAIL_INDEX_V(i, 4, Vector2());
@@ -240,10 +221,6 @@ auto CubeModelBuilder::_bind_methods() -> void
 	ClassDB::bind_method(
 		D_METHOD("result_get_uvs", "i"),
 		&CubeModelBuilder::vGetUVs
-	);
-	ClassDB::bind_method(
-		D_METHOD("result_get_normal", "i"),
-		&CubeModelBuilder::vGetNormal
 	);
 	ClassDB::bind_method(
 		D_METHOD("result_get_triangle", "i"),
@@ -308,7 +285,7 @@ auto CubeModelBuilder::_bind_methods() -> void
 	);
 
 	ClassDB::bind_method(
-		D_METHOD("create_face","cardinal","dst_vertices","dst_uvs","dst_normals","dst_indices"),
+		D_METHOD("create_face","cardinal"),
 		&CubeModelBuilder::createFace
 	);
 

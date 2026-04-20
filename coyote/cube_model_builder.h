@@ -23,17 +23,10 @@ class CubeModelBuilder : public RefCounted {
 
 	Vector3 vVertices[4] = {};
 	Vector2 vUVs[4] = {};
-	Vector3 vNormal = {};
 	Vector3i vIndices[2] = {};
 
 	public:
-	auto createFace (
-		int cardinal,
-		TypedArray<Vector3> intov,
-		TypedArray<Vector2> intou,
-		TypedArray<Vector3> inton,
-		TypedArray<int32_t> intoi
-	) -> bool;
+	auto createFace (int cardinal) -> bool;
 
 	public: // bindingz
 	auto get_bbox () const -> AABB;
@@ -54,7 +47,6 @@ class CubeModelBuilder : public RefCounted {
 	auto getTriangle (int i) const -> Vector3i;
 
 	auto vGetVertex (int i) const -> Vector3;
-	auto vGetNormal (int i) const -> Vector3;
 	auto vGetUVs (int i) const -> Vector2;
 
 	public: // staticz
