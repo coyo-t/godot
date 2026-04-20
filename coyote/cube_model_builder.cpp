@@ -74,7 +74,7 @@ auto CubeModelBuilder::createFace (
 	TypedArray<Vector2> intou,
 	TypedArray<Vector3> inton,
 	TypedArray<int32_t> intoi
-) -> void
+) -> bool
 {
 
 	const auto bb = bbox.abs();
@@ -101,8 +101,11 @@ auto CubeModelBuilder::createFace (
 	y0 += faceInset;
 	x1 -= faceInset;
 	y1 -= faceInset;
+
+	newVertexCount = 0;
+	newIndexCount = 0;
 	if (Math::is_zero_approx(x1-x0) || Math::is_zero_approx(y1-y0)) {
-		return;
+		return false;
 	}
 	
 	auto q0 = Vector2(x0, y0);
@@ -111,8 +114,7 @@ auto CubeModelBuilder::createFace (
 	auto trans = FACE_TRANSFORMS[cardinal].translated(cornerPostOffset);
 	auto ntrans = trans.basis.orthonormalized();
 	auto n = ntrans.xform(FACE_NORMALS[cardinal]);
-	inton.append_array({n,n,n,n});
-
+	
 	auto uv0 = Vector2 {
 		q0.x,
 		1-q1.y,
@@ -121,22 +123,24 @@ auto CubeModelBuilder::createFace (
 		q1.x,
 		1-q0.y,
 	};
-
-	intov.append_array({
-		trans.xform(Vector3(q0.x, q0.y, depth)),
-		trans.xform(Vector3(q0.x, q1.y, depth)),
-		trans.xform(Vector3(q1.x, q1.y, depth)),
-		trans.xform(Vector3(q1.x, q0.y, depth)),
-	});
-	intou.append_array({
-		Vector2(uv0.x, uv1.y),
-		Vector2(uv0.x, uv0.y),
-		Vector2(uv1.x, uv0.y),
-		Vector2(uv1.x, uv1.y),
-	});
-	intoi.append_array({0, 1, 2, 0, 2, 3});
-
-	return;
+	vNormal = n;
+	vVertices[0] = trans.xform(Vector3(q0.x, q0.y, depth));
+	vVertices[1] = trans.xform(Vector3(q0.x, q1.y, depth));
+	vVertices[2] = trans.xform(Vector3(q1.x, q1.y, depth));
+	vVertices[3] = trans.xform(Vector3(q1.x, q0.y, depth));
+	vUVs[0] = { uv0.x, uv1.y };
+	vUVs[1] = { uv0.x, uv0.y };
+	vUVs[2] = { uv1.x, uv0.y };
+	vUVs[3] = { uv1.x, uv1.y };
+	vIndices[0] = { 0, 1, 2 };
+	vIndices[1] = { 0, 2, 3 };
+	// inton.append_array({n,n,n,n});
+	// intov.append_array({vVertices[0],vVertices[1],vVertices[2],vVertices[3]});
+	// intou.append_array({vUVs[0],vUVs[1],vUVs[2],vUVs[3]});
+	// intoi.append_array({0, 1, 2, 0, 2, 3});
+	newVertexCount = 4;
+	newIndexCount = 6;
+	return true;
 }
 
 auto CubeModelBuilder::get_bbox() const -> AABB
@@ -179,8 +183,41 @@ auto CubeModelBuilder::set_face_inset(const double d) -> void
 	faceInset = d;
 }
 
-auto CubeModelBuilder::
-_bind_methods() -> void
+auto CubeModelBuilder::get_new_data_count() const -> Vector2i
+{
+	return Vector2i(newVertexCount, newIndexCount);
+}
+
+auto CubeModelBuilder::rendered_anything() const -> bool
+{
+	return newVertexCount > 0 && newIndexCount > 0;
+}
+
+auto CubeModelBuilder::getTriangle(int i) const -> Vector3i
+{
+	ERR_FAIL_INDEX_V(i, 2, Vector3i());
+	return vIndices[i];
+}
+
+auto CubeModelBuilder::vGetVertex(int i) const -> Vector3
+{
+	ERR_FAIL_INDEX_V(i, 4, Vector3());
+	return vVertices[i];
+}
+
+auto CubeModelBuilder::vGetNormal(int i) const -> Vector3
+{
+	ERR_FAIL_INDEX_V(i, 4, Vector3());
+	return vNormal;
+}
+
+auto CubeModelBuilder::vGetUVs(int i) const -> Vector2
+{
+	ERR_FAIL_INDEX_V(i, 4, Vector2());
+	return vUVs[i];
+}
+
+auto CubeModelBuilder::_bind_methods() -> void
 {
 	ClassDB::bind_method(
 		D_METHOD("set_bbox", "to"),
@@ -194,6 +231,23 @@ _bind_methods() -> void
 		PropertyInfo(Variant::AABB, "bbox"),
 		"set_bbox",
 		"get_bbox"
+	);
+
+	ClassDB::bind_method(
+		D_METHOD("result_get_vertex", "i"),
+		&CubeModelBuilder::vGetVertex
+	);
+	ClassDB::bind_method(
+		D_METHOD("result_get_uvs", "i"),
+		&CubeModelBuilder::vGetUVs
+	);
+	ClassDB::bind_method(
+		D_METHOD("result_get_normal", "i"),
+		&CubeModelBuilder::vGetNormal
+	);
+	ClassDB::bind_method(
+		D_METHOD("result_get_triangle", "i"),
+		&CubeModelBuilder::getTriangle
 	);
 
 	ClassDB::bind_method(
@@ -236,6 +290,21 @@ _bind_methods() -> void
 		PropertyInfo(Variant::VECTOR3, "corner_post_offset"),
 		"set_corner_post_offset",
 		"get_corner_post_offset"
+	);
+
+	ClassDB::bind_method(
+		D_METHOD("rendered_anything"),
+		&CubeModelBuilder::rendered_anything
+	);
+
+	ClassDB::bind_method(
+		D_METHOD("get_new_data_counts"),
+		&CubeModelBuilder::get_new_data_count
+	);
+	ADD_PROPERTY(
+		PropertyInfo(Variant::VECTOR2I, "new_data_counts"),
+		"",
+		"get_new_data_counts"
 	);
 
 	ClassDB::bind_method(
