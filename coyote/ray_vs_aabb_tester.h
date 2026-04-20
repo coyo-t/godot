@@ -210,7 +210,7 @@ class RayVsAABB : public RefCounted {
 	};
 	
 	auto get_hit_resultv (HitResult type) const -> Vector3 {
-		double ox,oy,oz;
+		double ox=0,oy=0,oz=0;
 		get_hit_result(type, &ox, &oy, &oz);
 		return Vector3(
 			static_cast<real_t>(ox),

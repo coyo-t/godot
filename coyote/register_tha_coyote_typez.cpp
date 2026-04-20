@@ -7,6 +7,7 @@
 #include "chunk_spacer.h"
 #include "ray_vs_aabb_tester.h"
 #include "grid_walker_3d.h"
+#include "cube_model_builder.h"
 
 auto register_tha_coyote_typez(int mode) -> void
 {
@@ -17,6 +18,7 @@ auto register_tha_coyote_typez(int mode) -> void
 			GDREGISTER_CLASS(GridSpaceWalker3D);
 			GDREGISTER_CLASS(BlockTextureManager);
 			GDREGISTER_CLASS(ChunkSpacer);
+			GDREGISTER_CLASS(CubeModelBuilder);
 			break;
 		}
 		case 1: { // unregister
