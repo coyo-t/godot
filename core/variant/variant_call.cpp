@@ -2583,6 +2583,8 @@ static void _register_variant_builtin_methods_misc() {
 	bind_method(AABB, get_endpoint, sarray("idx"), varray());
 	bind_methodv(AABB, intersects_segment, &AABB::intersects_segment_bind, sarray("from", "to"), varray());
 	bind_methodv(AABB, intersects_ray, &AABB::intersects_ray_bind, sarray("from", "dir"), varray());
+	bind_method(AABB, is_point, sarray(), varray());
+	bind_method(AABB, is_point_approx, sarray(), varray());
 
 	/* Transform3D */
 

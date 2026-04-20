@@ -142,6 +142,13 @@ struct [[nodiscard]] AABB {
 		return position + (size * 0.5f);
 	}
 
+	_FORCE_INLINE_ bool is_point() const {
+		return ((size.x+0)==0) && ((size.y+0)==0) && ((size.z+0)==0);
+	}
+	_FORCE_INLINE_ bool is_point_approx() const {
+		return Math::is_zero_approx(size.x) && Math::is_zero_approx(size.y) && Math::is_zero_approx(size.z);
+	}
+
 	uint32_t hash() const {
 		uint32_t h = hash_murmur3_one_real(position.x);
 		h = hash_murmur3_one_real(position.y, h);
