@@ -165,8 +165,8 @@ struct [[nodiscard]] Vector3 {
 	_FORCE_INLINE_ Vector3 sign() const;
 	_FORCE_INLINE_ Vector3 ceil() const;
 	_FORCE_INLINE_ Vector3 round() const;
-	_FORCE_INLINE_ Vector3i floori() const;
-	_FORCE_INLINE_ Vector3i ceili() const;
+	Vector3i floori() const;
+	Vector3i ceili() const;
 
 	_FORCE_INLINE_ real_t distance_to(const Vector3 &p_to) const;
 	_FORCE_INLINE_ real_t distance_squared_to(const Vector3 &p_to) const;
