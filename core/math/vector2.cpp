@@ -109,6 +109,20 @@ Vector2 Vector2::round() const {
 	return Vector2(Math::round(x), Math::round(y));
 }
 
+Vector2i Vector2::floori() const {
+	return Vector2i {
+		static_cast<int32_t>(Math::floor(x)),
+		static_cast<int32_t>(Math::floor(y)),
+	};
+}
+
+Vector2i Vector2::ceili() const {
+	return Vector2i {
+		static_cast<int32_t>(Math::ceil(x)),
+		static_cast<int32_t>(Math::ceil(y)),
+	};
+}
+
 Vector2 Vector2::rotated(real_t p_by) const {
 	real_t sine = Math::sin(p_by);
 	real_t cosi = Math::cos(p_by);

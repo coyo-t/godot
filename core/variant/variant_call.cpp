@@ -2178,6 +2178,8 @@ static void _register_variant_builtin_methods_math() {
 	bind_method(Vector2, floor, sarray(), varray());
 	bind_method(Vector2, ceil, sarray(), varray());
 	bind_method(Vector2, round, sarray(), varray());
+	bind_method(Vector2, floori, sarray(), varray());
+	bind_method(Vector2, ceili, sarray(), varray());
 	bind_method(Vector2, aspect, sarray(), varray());
 	bind_method(Vector2, dot, sarray("with"), varray());
 	bind_method(Vector2, slide, sarray("n"), varray());
@@ -2289,6 +2291,8 @@ static void _register_variant_builtin_methods_math() {
 	bind_method(Vector3, floor, sarray(), varray());
 	bind_method(Vector3, ceil, sarray(), varray());
 	bind_method(Vector3, round, sarray(), varray());
+	bind_method(Vector3, floori, sarray(), varray());
+	bind_method(Vector3, ceili, sarray(), varray());
 	bind_method(Vector3, posmod, sarray("mod"), varray());
 	bind_method(Vector3, posmodv, sarray("modv"), varray());
 	bind_method(Vector3, project, sarray("b"), varray());
@@ -2572,7 +2576,8 @@ static void _register_variant_builtin_methods_misc() {
 	bind_method(AABB, intersection, sarray("with"), varray());
 	bind_method(AABB, merge, sarray("with"), varray());
 	bind_method(AABB, expand, sarray("to_point"), varray());
-	bind_method(AABB, grow, sarray("by"), varray());
+	bind_method(AABB, extruded, sarray("by"), varray());
+	bind_method(AABB, grow, sarray("by_amount"), varray());
 	bind_method(AABB, get_support, sarray("direction"), varray());
 	bind_method(AABB, get_longest_axis, sarray(), varray());
 	bind_method(AABB, get_longest_axis_index, sarray(), varray());
@@ -2585,6 +2590,8 @@ static void _register_variant_builtin_methods_misc() {
 	bind_methodv(AABB, intersects_ray, &AABB::intersects_ray_bind, sarray("from", "dir"), varray());
 	bind_method(AABB, is_point, sarray(), varray());
 	bind_method(AABB, is_point_approx, sarray(), varray());
+	bind_method(AABB, translated, sarray("amount"), varray());
+	bind_method(AABB, scaled, sarray("amount"), varray());
 
 	/* Transform3D */
 

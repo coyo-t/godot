@@ -182,6 +182,8 @@ struct [[nodiscard]] Vector2 {
 	Vector2 floor() const;
 	Vector2 ceil() const;
 	Vector2 round() const;
+	Vector2i floori() const;
+	Vector2i ceili() const;
 	Vector2 snapped(const Vector2 &p_by) const;
 	Vector2 snappedf(real_t p_by) const;
 	Vector2 clamp(const Vector2 &p_min, const Vector2 &p_max) const;

@@ -110,6 +110,9 @@ struct [[nodiscard]] AABB {
 	_FORCE_INLINE_ void project_range_in_plane(const Plane &p_plane, real_t &r_min, real_t &r_max) const;
 	_FORCE_INLINE_ void expand_to(const Vector3 &p_vector); /** expand to contain a point if necessary */
 
+	void extrude (const Vector3& v);
+	AABB extruded (const Vector3& v) const;
+
 	_FORCE_INLINE_ AABB abs() const {
 		return AABB(position + size.minf(0), size.abs());
 	}
@@ -148,6 +151,9 @@ struct [[nodiscard]] AABB {
 	_FORCE_INLINE_ bool is_point_approx() const {
 		return Math::is_zero_approx(size.x) && Math::is_zero_approx(size.y) && Math::is_zero_approx(size.z);
 	}
+
+	AABB translated (const Vector3& amount) const;
+	AABB scaled (const Vector3& amount) const;
 
 	uint32_t hash() const {
 		uint32_t h = hash_murmur3_one_real(position.x);
@@ -401,6 +407,28 @@ inline void AABB::expand_to(const Vector3 &p_vector) {
 
 	position = begin;
 	size = end - begin;
+}
+
+inline void AABB::extrude(const Vector3 & v)
+{
+	#ifdef MATH_CHECKS
+	if (unlikely(size.x < 0 || size.y < 0 || size.z < 0)) {
+		ERR_PRINT("AABB size is negative, this is not supported. Use AABB.abs() to get an AABB with a positive size.");
+	}
+	#endif
+	auto p0 = position;
+	auto p1 = position + size;
+	const auto x = v.x;
+	const auto y = v.y;
+	const auto z = v.z;
+	if (x < 0) { p0.x += x; }
+	if (y < 0) { p0.y += y; }
+	if (z < 0) { p0.z += z; }
+	if (x > 0) { p1.x += x; }
+	if (y > 0) { p1.y += y; }
+	if (z > 0) { p1.z += z; }
+	position = p0;
+	size = p1-p0;
 }
 
 void AABB::project_range_in_plane(const Plane &p_plane, real_t &r_min, real_t &r_max) const {

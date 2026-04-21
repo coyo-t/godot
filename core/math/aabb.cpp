@@ -348,6 +348,13 @@ AABB AABB::expand(const Vector3 &p_vector) const {
 	return aabb;
 }
 
+AABB AABB::extruded(const Vector3 & v) const
+{
+	auto bbox = *this;
+	bbox.extrude(v);
+	return bbox;
+}
+
 AABB AABB::grow(real_t p_by) const {
 	AABB aabb = *this;
 	aabb.grow_by(p_by);
@@ -440,6 +447,21 @@ Variant AABB::intersects_ray_bind(const Vector3 &p_from, const Vector3 &p_dir) c
 	return Variant();
 }
 
+
+AABB AABB::translated(const Vector3 & amount) const
+{
+	auto bbox = *this;
+	bbox.position += amount;
+	return bbox;
+}
+
+AABB AABB::scaled(const Vector3 & amount) const
+{
+	auto bbox = *this;
+	bbox.position *= amount;
+	bbox.size *= amount;
+	return bbox;
+}
 
 AABB::operator String() const {
 	return "[P: " + String(position) + ", S: " + String(size) + "]";
