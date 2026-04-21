@@ -69,6 +69,22 @@ Vector3i Vector3i::snappedi(int32_t p_step) const {
 			Math::snapped(z, p_step));
 }
 
+Vector3i Vector3::floori() const {
+	return Vector3i {
+		static_cast<int32_t>(Math::floor(x)),
+		static_cast<int32_t>(Math::floor(y)),
+		static_cast<int32_t>(Math::floor(z)),
+	};
+}
+
+Vector3i Vector3::ceili() const {
+	return Vector3i {
+		static_cast<int32_t>(Math::ceil(x)),
+		static_cast<int32_t>(Math::ceil(y)),
+		static_cast<int32_t>(Math::ceil(z)),
+	};
+}
+
 Vector3i::operator String() const {
 	return "(" + itos(x) + ", " + itos(y) + ", " + itos(z) + ")";
 }

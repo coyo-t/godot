@@ -275,22 +275,6 @@ Vector3 Vector3::round() const {
 	return Vector3(Math::round(x), Math::round(y), Math::round(z));
 }
 
-Vector3i Vector3::floori() const {
-	return Vector3i {
-		static_cast<int32_t>(Math::floor(x)),
-		static_cast<int32_t>(Math::floor(y)),
-		static_cast<int32_t>(Math::floor(z)),
-	};
-}
-
-Vector3i Vector3::ceili() const {
-	return Vector3i {
-		static_cast<int32_t>(Math::ceil(x)),
-		static_cast<int32_t>(Math::ceil(y)),
-		static_cast<int32_t>(Math::ceil(z)),
-	};
-}
-
 Vector3 Vector3::lerp(const Vector3 &p_to, real_t p_weight) const {
 	Vector3 res = *this;
 	res.x = Math::lerp(res.x, p_to.x, p_weight);
