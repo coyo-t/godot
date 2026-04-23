@@ -17,6 +17,10 @@ auto BitSet::hasAnyData() const -> bool
 	return bytes != nullptr && byteCount > 0;
 }
 
+BitSet::BitSet()
+{
+}
+
 BitSet::~BitSet()
 {
 	if (hasAnyData())
@@ -66,7 +70,7 @@ auto BitSet::andWithIsZero(const BitSet & other) const -> bool
 	auto herPtr = (other.hasAnyData()) ? other.bytes : heah;
 	auto herEnd = herPtr + herSize;
 
-	for (auto i = 0; i < maxSize; i++)
+	for (uint64_t i = 0; i < maxSize; i++)
 	{
 		if (myPtr == heah && herPtr == heah)
 		{
@@ -118,7 +122,7 @@ auto BitSet::resize(uint64_t newBitCount) -> void
 	if (newBitCount == 0)
 		newByteCount = 0;
 	else
-		((newBitCount - 1) >> 3) + 1;
+		newByteCount = ((newBitCount - 1) >> 3) + 1;
 	//
 	uint64_t actualBitCount = newByteCount * 8;
 	int deadBitCount = actualBitCount - newBitCount;
@@ -141,7 +145,7 @@ auto BitSet::toByteArray() const -> Vector<uint8_t>
 	normalizeEndingByte();
 	auto myAddr = bytes;
 	auto herAddr = news.ptrw();
-	for (auto i = 0; i < bc; i++)
+	for (uint64_t i = 0; i < bc; i++)
 	{
 		*herAddr = *myAddr;
 		myAddr++;
@@ -199,10 +203,44 @@ auto BitSet::toggleBit(uint64_t index) -> void
 	bytes[index >> 3] ^= (1 << (index & 7));
 }
 
+auto BitSet::gd_and_with_is_0(Ref<BitSet> other) const -> bool
+{
+	ERR_FAIL_COND_V(other.is_null(), false);
+	return andWithIsZero(*other.ptr());
+}
+
+auto BitSet::gd_contents_eq(const Ref<BitSet> other) const -> bool
+{
+	ERR_FAIL_COND_V(other.is_null(), false);
+	return andWithIsZero(*other.ptr());
+}
+
 auto BitSet::setBitTo(uint64_t index, bool value) -> bool
 {
 	if (value)
 		return setBitTrue(index);
 	else
 		return setBitFalse(index);
+}
+
+
+auto BitSet::_bind_methods() -> void
+{
+
+	ClassDB::bind_method(D_METHOD("resize", "bit_count"), &BitSet::resize);
+	ClassDB::bind_method(D_METHOD("clear", "value"), &BitSet::clear, DEFVAL(false));
+	ClassDB::bind_method(D_METHOD("to_byte_array"), &BitSet::toByteArray);
+	ClassDB::bind_method(D_METHOD("doesnt_overlap", "other"), &BitSet::gd_and_with_is_0);
+	ClassDB::bind_method(D_METHOD("any_are_true"), &BitSet::anyBitsAreTrue);
+	ClassDB::bind_method(D_METHOD("count_true_bits"), &BitSet::countTrueBits);
+
+	ClassDB::bind_method(D_METHOD("get_bit", "index"), &BitSet::getBit);
+	ClassDB::bind_method(D_METHOD("set_bit", "index", "to"), &BitSet::setBitTo);
+	ClassDB::bind_method(D_METHOD("toggle_bit", "index"), &BitSet::toggleBit);
+	ClassDB::bind_method(D_METHOD("set_bit_on", "index"), &BitSet::setBitTrue);
+	ClassDB::bind_method(D_METHOD("set_bit_off", "index"), &BitSet::setBitFalse);
+	
+	ClassDB::bind_method(D_METHOD("contents_equals", "other"), &BitSet::gd_contents_eq);
+
+	ClassDB::bind_method(D_METHOD("size"), &BitSet::getBitCount);
 }
