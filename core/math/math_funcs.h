@@ -811,4 +811,6 @@ _ALWAYS_INLINE_ float snap_scalar_separation(float p_offset, float p_step, float
 	return p_target;
 }
 
+auto count_bits (const uint8_t* data, uint64_t count) -> uint64_t;
+
 }; // namespace Math

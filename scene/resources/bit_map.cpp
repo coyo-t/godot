@@ -91,24 +91,7 @@ void BitMap::set_bit_rect(const Rect2i &p_rect, bool p_value) {
 }
 
 int BitMap::get_true_bit_count() const {
-	int ds = bitmask.size();
-	const uint8_t *d = bitmask.ptr();
-	int c = 0;
-
-	// Fast, almost branchless version.
-
-	for (int i = 0; i < ds; i++) {
-		c += (d[i] & (1 << 7)) >> 7;
-		c += (d[i] & (1 << 6)) >> 6;
-		c += (d[i] & (1 << 5)) >> 5;
-		c += (d[i] & (1 << 4)) >> 4;
-		c += (d[i] & (1 << 3)) >> 3;
-		c += (d[i] & (1 << 2)) >> 2;
-		c += (d[i] & (1 << 1)) >> 1;
-		c += d[i] & 1;
-	}
-
-	return c;
+	return Math::count_bits(bitmask.ptr(), bitmask.size());
 }
 
 void BitMap::set_bitv(const Point2i &p_pos, bool p_value) {

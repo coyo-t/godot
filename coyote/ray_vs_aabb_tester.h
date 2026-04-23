@@ -212,11 +212,7 @@ class RayVsAABB : public RefCounted {
 	auto get_hit_resultv (HitResult type) const -> Vector3 {
 		double ox=0,oy=0,oz=0;
 		get_hit_result(type, &ox, &oy, &oz);
-		return Vector3(
-			static_cast<real_t>(ox),
-			static_cast<real_t>(oy),
-			static_cast<real_t>(oz)
-		);
+		return Vector3(ox,oy,oz);
 	};
 
 	auto get_did_hit () const -> bool {

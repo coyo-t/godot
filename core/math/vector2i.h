@@ -124,6 +124,30 @@ struct [[nodiscard]] Vector2i {
 	constexpr Vector2i operator%(int32_t p_rvalue) const;
 	constexpr void operator%=(int32_t p_rvalue);
 
+	constexpr Vector2i &operator>>=(int32_t p_i);
+	constexpr Vector2i operator>>(int32_t p_i) const;
+	constexpr Vector2i &operator<<=(int32_t p_i);
+	constexpr Vector2i operator<<(int32_t p_i) const;
+	constexpr Vector2i &operator&=(int32_t p_i);
+	constexpr Vector2i operator&(int32_t p_i) const;
+	constexpr Vector2i &operator|=(int32_t p_i);
+	constexpr Vector2i operator|(int32_t p_i) const;
+	constexpr Vector2i &operator^=(int32_t p_i);
+	constexpr Vector2i operator^(int32_t p_i) const;
+
+	constexpr Vector2i &operator>>=(const Vector2i& p_v);
+	constexpr Vector2i operator>>(const Vector2i& p_v) const;
+	constexpr Vector2i &operator<<=(const Vector2i& p_v);
+	constexpr Vector2i operator<<(const Vector2i& p_v) const;
+	constexpr Vector2i &operator&=(const Vector2i& p_v);
+	constexpr Vector2i operator&(const Vector2i& p_v) const;
+	constexpr Vector2i &operator|=(const Vector2i& p_v);
+	constexpr Vector2i operator|(const Vector2i& p_v) const;
+	constexpr Vector2i &operator^=(const Vector2i& p_v);
+	constexpr Vector2i operator^(const Vector2i& p_v) const;
+
+	constexpr Vector2i operator~() const;
+
 	constexpr Vector2i operator-() const;
 	constexpr bool operator<(const Vector2i &p_vec2) const { return (x == p_vec2.x) ? (y < p_vec2.y) : (x < p_vec2.x); }
 	constexpr bool operator>(const Vector2i &p_vec2) const { return (x == p_vec2.x) ? (y > p_vec2.y) : (x > p_vec2.x); }
@@ -222,6 +246,104 @@ constexpr Vector2i Vector2i::operator%(int32_t p_rvalue) const {
 constexpr void Vector2i::operator%=(int32_t p_rvalue) {
 	x %= p_rvalue;
 	y %= p_rvalue;
+}
+
+// v bitwise int
+inline constexpr Vector2i & Vector2i::operator>>=(int32_t p_i)
+{
+	x >>= p_i;
+	y >>= p_i;
+	return *this;
+}
+constexpr Vector2i Vector2i::operator>>(int32_t p_i) const {
+	return Vector2i(x >> p_i, y >> p_i);
+}
+inline constexpr Vector2i & Vector2i::operator<<=(int32_t p_i)
+{
+	x <<= p_i;
+	y <<= p_i;
+	return *this;
+}
+constexpr Vector2i Vector2i::operator<<(int32_t p_i) const {
+	return Vector2i(x << p_i, y << p_i);
+}
+inline constexpr Vector2i & Vector2i::operator&=(int32_t p_i)
+{
+	x &= p_i;
+	y &= p_i;
+	return *this;
+}
+constexpr Vector2i Vector2i::operator&(int32_t p_i) const {
+	return Vector2i(x & p_i, y & p_i);
+}
+inline constexpr Vector2i & Vector2i::operator|=(int32_t p_i)
+{
+	x |= p_i;
+	y |= p_i;
+	return *this;
+}
+constexpr Vector2i Vector2i::operator|(int32_t p_i) const {
+	return Vector2i(x | p_i, y | p_i);
+}
+inline constexpr Vector2i & Vector2i::operator^=(int32_t p_i)
+{
+	x ^= p_i;
+	y ^= p_i;
+	return *this;
+}
+constexpr Vector2i Vector2i::operator^(int32_t p_i) const {
+	return Vector2i(x ^ p_i, y ^ p_i);
+}
+
+// v bitwise v
+inline constexpr Vector2i & Vector2i::operator>>=(const Vector2i& p_v)
+{
+	x >>= p_v.x;
+	y >>= p_v.y;
+	return *this;
+}
+constexpr Vector2i Vector2i::operator>>(const Vector2i& p_v) const {
+	return Vector2i(x >> p_v.x, y >> p_v.y);
+}
+inline constexpr Vector2i & Vector2i::operator<<=(const Vector2i& p_v)
+{
+	x <<= p_v.x;
+	y <<= p_v.y;
+	return *this;
+}
+constexpr Vector2i Vector2i::operator<<(const Vector2i& p_v) const {
+	return Vector2i(x << p_v.x, y << p_v.y);
+}
+inline constexpr Vector2i & Vector2i::operator&=(const Vector2i& p_v)
+{
+	x &= p_v.x;
+	y &= p_v.y;
+	return *this;
+}
+constexpr Vector2i Vector2i::operator&(const Vector2i& p_v) const {
+	return Vector2i(x & p_v.x, y & p_v.y);
+}
+inline constexpr Vector2i & Vector2i::operator|=(const Vector2i& p_v)
+{
+	x |= p_v.x;
+	y |= p_v.y;
+	return *this;
+}
+constexpr Vector2i Vector2i::operator|(const Vector2i& p_v) const {
+	return Vector2i(x | p_v.x, y | p_v.y);
+}
+inline constexpr Vector2i & Vector2i::operator^=(const Vector2i& p_v)
+{
+	x ^= p_v.x;
+	y ^= p_v.y;
+	return *this;
+}
+constexpr Vector2i Vector2i::operator^(const Vector2i& p_v) const {
+	return Vector2i(x ^ p_v.x, y ^ p_v.y);
+}
+
+constexpr Vector2i Vector2i::operator~() const {
+	return Vector2i(~x, ~y);
 }
 
 constexpr Vector2i Vector2i::operator-() const {

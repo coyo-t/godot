@@ -180,3 +180,23 @@ float Math::random(float p_from, float p_to) {
 int Math::random(int p_from, int p_to) {
 	return default_rand.random(p_from, p_to);
 }
+
+auto Math::count_bits(const uint8_t* data, uint64_t bytecount) -> uint64_t
+{
+	uint64_t c = 0;
+
+	// originally from bit_map
+	// Fast, almost branchless version.
+	for (uint64_t i = 0; i < bytecount; i++) {
+		c += (data[i] & (1 << 7)) >> 7;
+		c += (data[i] & (1 << 6)) >> 6;
+		c += (data[i] & (1 << 5)) >> 5;
+		c += (data[i] & (1 << 4)) >> 4;
+		c += (data[i] & (1 << 3)) >> 3;
+		c += (data[i] & (1 << 2)) >> 2;
+		c += (data[i] & (1 << 1)) >> 1;
+		c += data[i] & 1;
+	}
+
+	return c;
+}
