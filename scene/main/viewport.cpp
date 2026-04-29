@@ -4567,12 +4567,13 @@ void Viewport::_camera_3d_set(Camera3D *p_camera) {
 		return;
 	}
 
-#if DEBUG_ENABLED
+	//COYOTE CAMERA OVERRIDE
+// #if DEBUG_ENABLED
 	if (is_camera_3d_override_enabled()) {
 		camera_3d_override.set_overridden_camera(p_camera);
 		return;
 	}
-#endif // DEBUG_ENABLED
+// #endif // DEBUG_ENABLED
 
 	if (camera_3d) {
 		camera_3d->notification(Camera3D::NOTIFICATION_LOST_CURRENT);
@@ -4622,7 +4623,8 @@ void Viewport::_camera_3d_make_next_current(Camera3D *p_exclude) {
 	}
 }
 
-#if DEBUG_ENABLED
+// COYOTE: CAMERA OVERRIDE
+// #if DEBUG_ENABLED
 void Viewport::enable_camera_3d_override(bool p_enable) {
 	ERR_MAIN_THREAD_GUARD;
 
@@ -4649,7 +4651,7 @@ Camera3D *Viewport::get_override_camera_3d() const {
 	ERR_FAIL_COND_V(!camera_3d_override.is_enabled(), nullptr);
 	return get_camera_3d();
 }
-#endif //DEBUG_ENABLED
+// #endif //DEBUG_ENABLED
 
 void Viewport::set_disable_3d(bool p_disable) {
 	ERR_MAIN_THREAD_GUARD;
@@ -5148,6 +5150,18 @@ void Viewport::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("set_vrs_texture", "texture"), &Viewport::set_vrs_texture);
 	ClassDB::bind_method(D_METHOD("get_vrs_texture"), &Viewport::get_vrs_texture);
+	
+	// COYOTE CAMERA OVERRIDE BIND
+	ClassDB::bind_method(D_METHOD("enable_camera_3d_override", "enabled"), &Viewport::enable_camera_3d_override);
+	ClassDB::bind_method(D_METHOD("is_camera_3d_override_enabled"), &Viewport::is_camera_3d_override_enabled);
+	ClassDB::bind_method(D_METHOD("get_override_camera_3d"), &Viewport::get_override_camera_3d);
+	ClassDB::bind_method(D_METHOD("get_overridden_camera_3d"), &Viewport::get_overridden_camera_3d);
+
+	ClassDB::bind_method(D_METHOD("enable_camera_2d_override", "enabled"), &Viewport::enable_camera_2d_override);
+	ClassDB::bind_method(D_METHOD("is_camera_2d_override_enabled"), &Viewport::is_camera_2d_override_enabled);
+	ClassDB::bind_method(D_METHOD("get_override_camera_2d"), &Viewport::get_override_camera_2d);
+	ClassDB::bind_method(D_METHOD("get_overridden_camera_2d"), &Viewport::get_overridden_camera_2d);
+
 
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "disable_3d"), "set_disable_3d", "is_3d_disabled");
 #ifndef XR_DISABLED

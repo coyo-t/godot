@@ -735,7 +735,8 @@ public:
 	virtual bool is_sub_viewport() const { return false; }
 
 private:
-#if DEBUG_ENABLED
+// COYOTE CAMERA OVERRIDE
+// #if DEBUG_ENABLED
 	template <class T>
 	class CameraOverride {
 	private:
@@ -750,7 +751,7 @@ private:
 		void set_overridden_camera(const T *p_camera);
 		T *get_overridden_camera() const;
 	};
-#endif // DEBUG_ENABLED
+// #endif // DEBUG_ENABLED
 
 	// 2D audio, camera, and physics. (don't put World2D here because World2D is needed for Control nodes).
 	friend class AudioListener2D; // Needs _audio_listener_2d_set and _audio_listener_2d_remove
@@ -763,7 +764,8 @@ private:
 	friend class Camera2D; // Needs _camera_2d_set
 	Camera2D *camera_2d = nullptr;
 	void _camera_2d_set(Camera2D *p_camera_2d);
-#if DEBUG_ENABLED
+// COYOTE CAMERRA OVERRIDE
+// #if DEBUG_ENABLED
 	CameraOverride<Camera2D> camera_2d_override;
 
 public:
@@ -771,7 +773,7 @@ public:
 	bool is_camera_2d_override_enabled() const;
 	Camera2D *get_overridden_camera_2d() const;
 	Camera2D *get_override_camera_2d() const;
-#endif // DEBUG_ENABLED
+// #endif // DEBUG_ENABLED
 
 private:
 #ifndef PHYSICS_2D_DISABLED
@@ -815,9 +817,10 @@ private:
 
 	friend class Camera3D;
 	Camera3D *camera_3d = nullptr;
-#if DEBUG_ENABLED
+// COYOTE CAMERA OVERRIDE
+// #if DEBUG_ENABLED
 	CameraOverride<Camera3D> camera_3d_override;
-#endif // DEBUG_ENABLED
+// #endif // DEBUG_ENABLED
 	HashSet<Camera3D *> camera_3d_set;
 	void _camera_3d_transform_changed_notify();
 	void _camera_3d_set(Camera3D *p_camera);
@@ -838,12 +841,13 @@ public:
 
 	Camera3D *get_camera_3d() const;
 
-#if DEBUG_ENABLED
+	// COYOTE CAMERA OVERRIDE
+// #if DEBUG_ENABLED
 	void enable_camera_3d_override(bool p_enable);
 	bool is_camera_3d_override_enabled() const;
 	Camera3D *get_overridden_camera_3d() const;
 	Camera3D *get_override_camera_3d() const;
-#endif // DEBUG_ENABLED
+// #endif // DEBUG_ENABLED
 
 	void set_disable_3d(bool p_disable);
 	bool is_3d_disabled() const;
