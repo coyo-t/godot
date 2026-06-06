@@ -9,7 +9,9 @@
 #include "grid_walker_3d.h"
 #include "cube_model_builder.h"
 #include "bit_set.h"
+#include "gd_chunk_manager.h"
 
+// scons platform=windows use_mingw=yes
 auto register_tha_coyote_typez(int mode) -> void
 {
 	OS::get_singleton()->yield();
@@ -20,6 +22,7 @@ auto register_tha_coyote_typez(int mode) -> void
 			GDREGISTER_CLASS(GridSpaceWalker3D);
 			GDREGISTER_CLASS(ChunkSpacer);
 			GDREGISTER_CLASS(CubeModelBuilder);
+			GDREGISTER_CLASS(ChunkManager);
 			break;
 		}
 		case 1: { // unregister

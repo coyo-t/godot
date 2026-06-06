@@ -12,26 +12,26 @@ namespace FunnyBlock {
 	class Chunk;
 	struct BlockInstance;
 	
-	constexpr U64 CHUNK_PO2 = 4;
-	constexpr U64 CHUNK_SIZE = 1 << CHUNK_PO2;
-	constexpr U64 CHUNK_MASK = ((1<<(CHUNK_PO2-1))-1) | (1<<(CHUNK_PO2-1));
-	constexpr U64 CHUNK_INNER_COUNT = CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE;
+	constexpr I64 CHUNK_PO2 = 4;
+	constexpr I64 CHUNK_SIZE = 1 << CHUNK_PO2;
+	constexpr I64 CHUNK_MASK = ((1<<(CHUNK_PO2-1))-1) | (1<<(CHUNK_PO2-1));
+	constexpr I64 CHUNK_INNER_COUNT = CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE;
 	
-	constexpr U64 CHUNK_XSIZE = CHUNK_SIZE;
-	constexpr U64 CHUNK_YSIZE = CHUNK_SIZE;
-	constexpr U64 CHUNK_ZSIZE = CHUNK_SIZE;
+	constexpr I64 CHUNK_XSIZE = CHUNK_SIZE;
+	constexpr I64 CHUNK_YSIZE = CHUNK_SIZE;
+	constexpr I64 CHUNK_ZSIZE = CHUNK_SIZE;
 
-	constexpr U64 CHUNK_XSHIFT = 0 * CHUNK_PO2;
-	constexpr U64 CHUNK_YSHIFT = 1 * CHUNK_PO2;
-	constexpr U64 CHUNK_ZSHIFT = 2 * CHUNK_PO2;
+	constexpr I64 CHUNK_XSHIFT = 0 * CHUNK_PO2;
+	constexpr I64 CHUNK_YSHIFT = 1 * CHUNK_PO2;
+	constexpr I64 CHUNK_ZSHIFT = 2 * CHUNK_PO2;
 	
-	constexpr U64 CHUNK_XBITS = CHUNK_MASK;
-	constexpr U64 CHUNK_YBITS = CHUNK_MASK;
-	constexpr U64 CHUNK_ZBITS = CHUNK_MASK;
+	constexpr I64 CHUNK_XBITS = CHUNK_MASK;
+	constexpr I64 CHUNK_YBITS = CHUNK_MASK;
+	constexpr I64 CHUNK_ZBITS = CHUNK_MASK;
 	
-	constexpr U64 CHUNK_XMASK = CHUNK_XBITS << CHUNK_XSHIFT;
-	constexpr U64 CHUNK_YMASK = CHUNK_YBITS << CHUNK_YSHIFT;
-	constexpr U64 CHUNK_ZMASK = CHUNK_ZBITS << CHUNK_ZSHIFT;
+	constexpr I64 CHUNK_XMASK = CHUNK_XBITS << CHUNK_XSHIFT;
+	constexpr I64 CHUNK_YMASK = CHUNK_YBITS << CHUNK_YSHIFT;
+	constexpr I64 CHUNK_ZMASK = CHUNK_ZBITS << CHUNK_ZSHIFT;
 	
 
 	// struct OrderArray {
@@ -51,8 +51,8 @@ namespace FunnyBlock {
 
 	class World {
 		public:
-		U64 chunkCount = 0;
-		U64 allocatedChunkCount = 0;
+		I64 chunkCount = 0;
+		I64 allocatedChunkCount = 0;
 		U0* thaAllocation = nullptr;
 
 		public:
@@ -72,9 +72,7 @@ namespace FunnyBlock {
 			return static_cast<Chunk*>(thaAllocation);
 		}
 
-		auto getChunkUnsafe (I64 i) const -> Chunk* {
-			return getChunks() + i;
-		}
+		auto getChunkUnsafe (I64 i) const -> Chunk*;
 
 		// wrapped = 0b00: returns -1 if the point is not in local chunk space
 		// wrapped = 0b10: no safety, returns whatever the raw encode returns
@@ -102,9 +100,7 @@ namespace FunnyBlock {
 		I32 handle = 0;
 		I32 worldHandle = 0;
 
-		auto getBlockUnsafe (I64 i) const -> BlockInstance* {
-			return blocks + i;
-		}
+		auto getBlockUnsafe (I64 i) const -> BlockInstance*;
 	};
 
 	struct BlockInstance {

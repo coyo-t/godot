@@ -2,6 +2,11 @@
 
 #include<core/os/memory.h>
 
+auto FunnyBlock::World::getChunkUnsafe(I64 i) const -> Chunk *
+{
+	return getChunks() + i;
+}
+
 auto FunnyBlock::World::encodeChunkPoint(const Vector3i & p, int wrapped) const -> I64
 {
 	if ((wrapped&0b01) != 0)
@@ -51,13 +56,14 @@ auto FunnyBlock::World::createChunks(I32 chCount) -> U0
 	}
 	constexpr U64 blockInstSegmentSize = sizeof(BlockInstance) * CHUNK_INNER_COUNT;
 	constexpr U64 chBlockSize = sizeof(Chunk) + blockInstSegmentSize;
-
-	U64 chunkSegmentSize = sizeof(Chunk) * chCount;
-	U64 segmentByteSize = chunkSegmentSize + blockInstSegmentSize * chCount;
+	
+	U64 cc = (chCount < 0) ? 0 : static_cast<U64>(chCount);
+	U64 chunkSegmentSize = sizeof(Chunk) * cc;
+	U64 segmentByteSize = chunkSegmentSize + blockInstSegmentSize * cc;
 	auto* segment = memalloc(segmentByteSize);
 
-	chunkCount = chCount;
-	allocatedChunkCount = chCount;
+	allocatedChunkCount = (chCount < 0) ? 0 : chCount;
+	chunkCount = allocatedChunkCount;
 	thaAllocation = segment;
 	auto* chunks = static_cast<Chunk*>(segment);
 	auto* blocks = reinterpret_cast<BlockInstance*>(chunks+chCount);
@@ -88,5 +94,9 @@ auto FunnyBlock::World::destroyChunks() -> U0
 	thaAllocation = nullptr;
 }
 
+auto FunnyBlock::Chunk::getBlockUnsafe(I64 i) const -> BlockInstance *
+{
+	return blocks + i;
+}
 
 
