@@ -33,7 +33,17 @@ auto FunnyBlock::World::encodeChunkPoint(const Vector3i & p, int wrapped) const 
 	}
 }
 
-auto FunnyBlock::World::createChunks(I32 chCount)
+auto FunnyBlock::World::decodeChunkHandle(I64 p) const -> Vector3i
+{
+	return Vector3i {
+		(p >> CHUNK_XSHIFT) & CHUNK_XBITS,
+		(p >> CHUNK_YSHIFT) & CHUNK_YBITS,
+		(p >> CHUNK_ZSHIFT) & CHUNK_ZBITS,
+	};
+}
+
+
+auto FunnyBlock::World::createChunks(I32 chCount) -> U0
 {
 	if (thaAllocation != nullptr)
 	{
@@ -67,13 +77,14 @@ auto FunnyBlock::World::createChunks(I32 chCount)
 	}
 }
 
-auto FunnyBlock::World::destroyChunks()
+auto FunnyBlock::World::destroyChunks() -> U0
 {
-	if (thaAllocation == nullptr)
+	allocatedChunkCount = 0;
+	chunkCount = 0;
+	if (thaAllocation != nullptr)
 	{
-		return;
+		memfree(thaAllocation);
 	}
-	memfree(thaAllocation);
 	thaAllocation = nullptr;
 }
 

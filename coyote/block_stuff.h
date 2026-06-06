@@ -72,6 +72,10 @@ namespace FunnyBlock {
 			return static_cast<Chunk*>(thaAllocation);
 		}
 
+		auto getChunkUnsafe (I64 i) const -> Chunk* {
+			return getChunks() + i;
+		}
+
 		// wrapped = 0b00: returns -1 if the point is not in local chunk space
 		// wrapped = 0b10: no safety, returns whatever the raw encode returns
 		//
@@ -79,8 +83,10 @@ namespace FunnyBlock {
 		// wrapped = 0b11: same as 0b01, but will return `-index-1` if it was outside
 		auto encodeChunkPoint (const Vector3i& p, int wrapped) const -> I64;
 
-		auto createChunks (I32 chCount);
-		auto destroyChunks ();
+		auto decodeChunkHandle (I64 p) const -> Vector3i;
+
+		auto createChunks (I32 chCount) -> U0;
+		auto destroyChunks () -> U0;
 	};
 	
 	class Chunk {
@@ -96,6 +102,9 @@ namespace FunnyBlock {
 		I32 handle = 0;
 		I32 worldHandle = 0;
 
+		auto getBlockUnsafe (I64 i) const -> BlockInstance* {
+			return blocks + i;
+		}
 	};
 
 	struct BlockInstance {
