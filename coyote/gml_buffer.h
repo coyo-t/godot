@@ -24,6 +24,17 @@ class GMLBuffer : public RefCounted {
 	private:
 	auto ensure (int64_t at, int64_t amount) -> void;
 
+	template<typename Thing>
+	auto wrBytez (int32_t at, uint8_t* dst, Thing data) -> void {
+		constexpr auto szthing = sizeof(Thing);
+		ERR_FAIL_INDEX(at, capacity-szthing);
+		auto* wp = dst+at;
+		for (uint64_t i = 0; i < szthing; i++)
+		{
+			wp[i] = (data >> (i<<3)) & 0xFF;
+		}
+	}
+
 	public:
 	static auto _bind_methods () -> void;
 };

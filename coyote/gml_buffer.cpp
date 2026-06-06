@@ -1,16 +1,5 @@
 #include "gml_buffer.h"
 
-template<typename Thing>
-static auto wrBytez (int32_t at, uint8_t* dst, Thing data) -> void {
-	constexpr szthing = sizeof(Thing);
-	ERR_FAIL_INDEX(at, capacity-szthing);
-	const auto* wp = dst+at;
-	for (int64_t i = 0; i < szthing; i++)
-	{
-		wp[i] = (data >> (i<<3)) & 0xFF;
-	}
-}
-
 auto GMLBuffer::writeU8(int32_t at, uint8_t value) -> void
 {
 	wrBytez(at, data.ptrw(), value);
