@@ -20,6 +20,37 @@ auto ChunkManager::get_chunk_count() -> I64
 	return world.chunkCount;
 }
 
+auto ChunkManager::set_default_block_template_value(I64 to) -> U0
+{
+	world.defaultTemplateHandle = to;
+}
+
+auto ChunkManager::tg_get_handle(const Vector3i & global) -> RID
+{
+	return world.tgGetBlockHandle(global).toRID();
+}
+
+auto ChunkManager::handle_get_chunk(const RID & handle) const -> I32
+{
+	return Handle2Block(handle).chunkIndex;
+}
+
+auto ChunkManager::handle_get_block(const RID & handle) const -> I32
+{
+	return Handle2Block(handle).blockIndex;
+}
+
+auto ChunkManager::handle_to_vector2i(const RID & handle) const -> Vector2i
+{
+	auto uhh = Handle2Block(handle);
+	return Vector2i { uhh.chunkIndex, uhh.blockIndex };
+}
+
+auto ChunkManager::get_chunk_by_location(const Vector3i & global) -> I32
+{
+	return world.tgGetChunkByLocation(global);
+}
+
 auto ChunkManager::point_remove_subchunk_part(const Vector3i & p) const -> Vector3i
 {
 	return world.tgvRemoveSubChunkPart(p);
@@ -36,12 +67,10 @@ auto ChunkManager::point_in_local_chunk_bounds(const Vector3i & p) const -> Bool
 {
 	return world.tgvInChunkBounds(p);
 }
-
 auto ChunkManager::point_pack(const Vector3i & p) const -> I64
 {
 	return world.tgvPack(p);
 }
-
 auto ChunkManager::point_unpack(I64 v) const -> Vector3i
 {
 	return world.tgvUnpack(v);
@@ -90,6 +119,33 @@ auto ChunkManager::chunk_remove_from_world(I32 chunk) -> Boolean
 
 auto ChunkManager::_bind_methods() -> U0
 {
+
+
+
+	ClassDB::bind_method(
+		D_METHOD("handle_get_block", "handle"),
+		&ChunkManager::handle_get_block
+	);
+	ClassDB::bind_method(
+		D_METHOD("handle_get_chunk", "handle"),
+		&ChunkManager::handle_get_chunk
+	);
+	ClassDB::bind_method(
+		D_METHOD("handle_to_vector2i", "handle"),
+		&ChunkManager::handle_to_vector2i
+	);
+	ClassDB::bind_method(
+		D_METHOD("tg_get_handle", "p"),
+		&ChunkManager::tg_get_handle
+	);
+	ClassDB::bind_method(
+		D_METHOD("get_chunk_by_location", "p"),
+		&ChunkManager::get_chunk_by_location
+	);
+	ClassDB::bind_method(
+		D_METHOD("set_default_block_template_value", "tv"),
+		&ChunkManager::set_default_block_template_value
+	);
 	ClassDB::bind_method(
 		D_METHOD("chunk_remove_from_world", "chunk"),
 		&ChunkManager::chunk_remove_from_world

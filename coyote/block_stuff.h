@@ -3,6 +3,7 @@
 #include<core/templates/span.h>
 #include<core/math/vector3i.h>
 #include<core/templates/hash_map.h>
+#include<core/templates/rid.h>
 
 #include"coyote.h"
 
@@ -45,6 +46,12 @@ namespace FunnyBlock {
 		Handle2Block(I64 from): asLong(from) {
 		}
 		Handle2Block(I32 ci, I32 bi): chunkIndex(ci), blockIndex(bi) {
+		}
+		Handle2Block(RID from): asLong(from.get_id()) {
+		}
+
+		auto toRID () const -> RID {
+			return RID::from_uint64(static_cast<U64>(asLong));
 		}
 
 		auto isValid () const -> Boolean {
