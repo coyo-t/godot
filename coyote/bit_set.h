@@ -39,6 +39,9 @@ class BitSet : public RefCounted {
 	auto setBitTo (uint64_t index, bool value) -> bool;
 	auto toggleBit (uint64_t index) -> void;
 
+	auto isBitFalse (uint64_t index) const -> bool;
+	auto isBitTrue (uint64_t index) const -> bool;
+
 	auto gd_and_with_is_0 (const Ref<BitSet> other) const -> bool;
 	auto gd_contents_eq (const Ref<BitSet> other) const -> bool;
 

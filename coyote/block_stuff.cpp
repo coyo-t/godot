@@ -7,6 +7,15 @@ auto FunnyBlock::World::getChunkUnsafe(I64 i) const -> Chunk *
 	return getChunks() + i;
 }
 
+auto FunnyBlock::World::makeGlobalChunkLocation(const Vector3i & globalLocation) const -> Vector3i
+{
+	return Vector3i(
+		globalLocation.x & ~CHUNK_XBITS,
+		globalLocation.y & ~CHUNK_YBITS,
+		globalLocation.z & ~CHUNK_ZBITS
+	);
+}
+
 auto FunnyBlock::World::encodeChunkPoint(const Vector3i & p, int wrapped) const -> I64
 {
 	if ((wrapped&0b01) != 0)

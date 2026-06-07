@@ -203,6 +203,25 @@ auto BitSet::toggleBit(uint64_t index) -> void
 	bytes[index >> 3] ^= (1 << (index & 7));
 }
 
+auto BitSet::isBitFalse(uint64_t index) const -> bool
+{
+	ERR_FAIL_COND_V(bytes == nullptr, false);
+	ERR_FAIL_INDEX_V(index, bitCount, false);
+	auto by = bytes[index >> 3];
+	if (by == 0)
+	{
+		return true;
+	}
+	return (by & (1 << (index & 7))) == 0;
+}
+
+auto BitSet::isBitTrue(uint64_t index) const -> bool
+{
+	return !isBitFalse(index);
+}
+
+
+
 auto BitSet::gd_and_with_is_0(Ref<BitSet> other) const -> bool
 {
 	ERR_FAIL_COND_V(other.is_null(), false);

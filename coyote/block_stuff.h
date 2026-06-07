@@ -32,21 +32,6 @@ namespace FunnyBlock {
 	constexpr I64 CHUNK_XMASK = CHUNK_XBITS << CHUNK_XSHIFT;
 	constexpr I64 CHUNK_YMASK = CHUNK_YBITS << CHUNK_YSHIFT;
 	constexpr I64 CHUNK_ZMASK = CHUNK_ZBITS << CHUNK_ZSHIFT;
-	
-
-	// struct OrderArray {
-	// 	Vector3i order[CHUNK_INNER_COUNT] = {};
-	// 	constexpr OrderArray () : order() {
-	// 		for (auto zz = 0; zz < CHUNK_ZSIZE; zz++) {
-	// 			for (auto yy = 0; yy < CHUNK_YSIZE; yy++) {
-	// 				for (auto xx = 0; xx < CHUNK_XSIZE; xx++) {
-	// 					auto i = (zz * CHUNK_YSIZE + yy) * CHUNK_XSIZE + xx;
-	// 					order[i] = { xx, yy, zz };
-	// 				}
-	// 			}
-	// 		}
-	// 	};
-	// };
 
 
 	class World {
@@ -73,6 +58,8 @@ namespace FunnyBlock {
 		}
 
 		auto getChunkUnsafe (I64 i) const -> Chunk*;
+
+		auto makeGlobalChunkLocation (const Vector3i& globalLocation) const -> Vector3i;
 
 		// wrapped = 0b00: returns -1 if the point is not in local chunk space
 		// wrapped = 0b10: no safety, returns whatever the raw encode returns
