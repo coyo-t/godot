@@ -26,11 +26,16 @@ class ChunkManager : RefCounted {
 	
 	auto resize (I32 newCount) -> U0;
 	auto get_chunk_count () -> I64;
+	auto set_default_block_template_value (I64 to) -> U0;
 
 	auto point_remove_subchunk_part (const Vector3i& p) const -> Vector3i;
 	auto point_remove_chunk_part (const Vector3i& p) const -> Vector3i;
 	auto point_to_chunk_cel (const Vector3i& p) const -> Vector3i;
 	auto point_in_local_chunk_bounds (const Vector3i& p) const -> Boolean;
+
+	auto point_pack (const Vector3i& p) const -> I64;
+	auto point_unpack (I64 v) const -> Vector3i;
+
 
 	auto chunk_get_inner_count (I32 chunk) const -> I32;
 	auto chunk_get_size (I32 chunk) const -> Vector3i;

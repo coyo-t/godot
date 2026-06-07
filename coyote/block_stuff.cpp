@@ -19,7 +19,7 @@ static auto allocSegment (I32 chunkCount, U0* pev) -> AllocationResult {
 	}
 	
 	constexpr U64 blockInstSegmentSize = sizeof(BlockInstance) * CHUNK_INNER_COUNT;
-	constexpr U64 chBlockSize = sizeof(Chunk) + blockInstSegmentSize;
+	// constexpr U64 chBlockSize = sizeof(Chunk) + blockInstSegmentSize;
 	
 	U64 cc = static_cast<U64>(chunkCount);
 	U64 chunkSegmentSize = sizeof(Chunk) * cc;

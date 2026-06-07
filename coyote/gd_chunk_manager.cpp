@@ -37,6 +37,16 @@ auto ChunkManager::point_in_local_chunk_bounds(const Vector3i & p) const -> Bool
 	return world.tgvInChunkBounds(p);
 }
 
+auto ChunkManager::point_pack(const Vector3i & p) const -> I64
+{
+	return world.tgvPack(p);
+}
+
+auto ChunkManager::point_unpack(I64 v) const -> Vector3i
+{
+	return world.tgvUnpack(v);
+}
+
 auto ChunkManager::chunk_get_inner_count(I32 chunk) const -> I32
 {
 	ERR_FAIL_INDEX_V(chunk, world.chunkCount, 0);
