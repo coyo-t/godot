@@ -58,6 +58,7 @@ namespace FunnyBlock {
 		I32 chunkCount = 0;
 		I32 allocatedChunkCount = 0;
 		U0* thaAllocation = nullptr;
+		I32 defaultTemplateHandle = 0;
 
 		private:
 		HashMap<Vector3i, I32> hmChunksByLocation = {};
@@ -80,14 +81,17 @@ namespace FunnyBlock {
 		auto tgvPackLocal (const Vector3i& p) const -> I64;
 		auto tgvPackLocalAdjacent (const Vector3i& p) const -> I64;
 		auto tgvUnpack (I64 v) const -> Vector3i;
-
+		
+		auto tgResetChunkLocation (I32 chunk) -> Boolean;
+		auto tgChunkHasBeenPlaced (I32 chunk) const -> Boolean;
+		auto tgSetChunkLocation (I32 chunk, const Vector3i& p) -> Boolean;
 		auto tgGetChunkByLocation (const Vector3i& p) -> I32;
 		auto tgGetBlockHandle (const Vector3i& p) -> Handle2Block;
 
-		auto getChunkUnsafe (I64 i) const -> Chunk*;
+		auto tgResize (I32 newChunkCount) -> U0;
 
-		auto createChunks (I32 chCount) -> U0;
-		auto destroyChunks () -> U0;
+		auto getBlockPointer (Handle2Block handle) const -> BlockInstance*;
+		auto getChunkUnsafe (I64 i) const -> Chunk*;
 	};
 	
 	class Chunk {
@@ -97,7 +101,9 @@ namespace FunnyBlock {
 		// IE chunk in cel (2, 1, 4) would have a location of (32, 16, 64)
 		// assuming theyre 16x anyway :P
 		Vector3i globalLocation;
-		I32 padding;
+		U8 hasBeenPlaced = false;
+		U8 pad1;
+		U16 pad2;
 
 		// this shouldnt change even if chunks are reorganized IE via sorting
 		I32 handle = 0;
