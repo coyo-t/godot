@@ -2,6 +2,7 @@
 
 #include<core/templates/span.h>
 #include<core/math/vector3i.h>
+#include<core/templates/hash_map.h>
 
 #include"coyote.h"
 
@@ -33,42 +34,57 @@ namespace FunnyBlock {
 	constexpr I64 CHUNK_YMASK = CHUNK_YBITS << CHUNK_YSHIFT;
 	constexpr I64 CHUNK_ZMASK = CHUNK_ZBITS << CHUNK_ZSHIFT;
 
+	union Handle2Block {
+		I64 asLong;
+		struct {
+			I32 chunkIndex;
+			I32 blockIndex;
+		};
+		Handle2Block(): chunkIndex(-1), blockIndex(0) {
+		}
+		Handle2Block(I64 from): asLong(from) {
+		}
+		Handle2Block(I32 ci, I32 bi): chunkIndex(ci), blockIndex(bi) {
+		}
+
+		auto isValid () const -> Boolean {
+			return chunkIndex >= 0;
+		}
+	};
+	static_assert(sizeof(Handle2Block) == sizeof(I64));
 
 	class World {
 		public:
-		I64 chunkCount = 0;
-		I64 allocatedChunkCount = 0;
+		I32 chunkCount = 0;
+		I32 allocatedChunkCount = 0;
 		U0* thaAllocation = nullptr;
 
-		public:
-		auto encodeLocalChunkPointRaw (I64 x, I64 y, I64 z) const -> I64 {
-			return (
-				((x & CHUNK_XBITS) << CHUNK_XSHIFT) |
-				((y & CHUNK_YBITS) << CHUNK_YSHIFT) |
-				((z & CHUNK_ZBITS) << CHUNK_ZSHIFT)
-			);
-		};
+		private:
+		HashMap<Vector3i, I32> hmChunksByLocation = {};
+		I32 hmPevReadChunk = -2;
+		I32 hmPevReadBlock = -2;
+		Handle2Block hmPevBlockHandle = {};
+		Vector3i hmPevChunkLocation = {};
+		Vector3i hmPevBlockLocation = {};
 
-		auto pointIsLocallyInChunk (I64 x, I64 y, I64 z) const -> Boolean {
-			return ((x&CHUNK_XBITS)==x)&&((y&CHUNK_YBITS)==y)&&((z&CHUNK_ZBITS)==z);
-		};
-		
-		auto getChunks () const -> Chunk* {
-			return static_cast<Chunk*>(thaAllocation);
-		}
+		public:
+		auto tgGetChunkInnerCount () const -> I64;
+		auto tgGetChunkSize () const -> Vector3i;
+
+		auto tgvRemoveChunkPart (const Vector3i& p) const -> Vector3i;
+		auto tgvRemoveSubChunkPart (const Vector3i& p) const -> Vector3i;
+		auto tgvChunkify (const Vector3i& p) const -> Vector3i;
+		auto tgvInChunkBounds (const Vector3i& p) const -> Boolean;
+		auto tgvPack (const Vector3i& p) const -> I64;
+		auto tgvPackStrict (const Vector3i& p) const -> I64;
+		auto tgvPackLocal (const Vector3i& p) const -> I64;
+		auto tgvPackLocalAdjacent (const Vector3i& p) const -> I64;
+		auto tgvUnpack (I64 v) const -> Vector3i;
+
+		auto tgGetChunkByLocation (const Vector3i& p) -> I32;
+		auto tgGetBlockHandle (const Vector3i& p) -> Handle2Block;
 
 		auto getChunkUnsafe (I64 i) const -> Chunk*;
-
-		auto makeGlobalChunkLocation (const Vector3i& globalLocation) const -> Vector3i;
-
-		// wrapped = 0b00: returns -1 if the point is not in local chunk space
-		// wrapped = 0b10: no safety, returns whatever the raw encode returns
-		//
-		// wrapped = 0b01: returns the localized index
-		// wrapped = 0b11: same as 0b01, but will return `-index-1` if it was outside
-		auto encodeChunkPoint (const Vector3i& p, int wrapped) const -> I64;
-
-		auto decodeChunkHandle (I64 p) const -> Vector3i;
 
 		auto createChunks (I32 chCount) -> U0;
 		auto destroyChunks () -> U0;
