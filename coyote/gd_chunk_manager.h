@@ -33,12 +33,17 @@ class ChunkManager : RefCounted {
 	auto handle_get_chunk (const RID& handle) const -> I32;
 	auto handle_get_block (const RID& handle) const -> I32;
 	auto handle_to_vector2i (const RID& handle) const -> Vector2i;
+	auto handle_from_vector2i (const Vector2i& i) const -> RID;
+	auto handle_is_valid (const RID& handle) const -> Boolean;
 
 	auto point_remove_subchunk_part (const Vector3i& p) const -> Vector3i;
 	auto point_remove_chunk_part (const Vector3i& p) const -> Vector3i;
 	auto point_to_chunk_cel (const Vector3i& p) const -> Vector3i;
 	auto point_in_local_chunk_bounds (const Vector3i& p) const -> Boolean;
 	auto point_pack (const Vector3i& p) const -> I64;
+	auto point_pack_strict (const Vector3i& p) const -> I64;
+	auto point_pack_localized (const Vector3i& p) const -> I64;
+	auto point_pack_localized_adjacent (const Vector3i& p) const -> I64;
 	auto point_unpack (I64 v) const -> Vector3i;
 
 	auto chunk_get_inner_count (I32 chunk) const -> I32;
@@ -48,6 +53,9 @@ class ChunkManager : RefCounted {
 	auto chunk_set_location (I32 chunk, const Vector3i& p) -> Boolean;
 	auto chunk_is_in_world (I32 chunk) const -> Boolean;
 	auto chunk_remove_from_world (I32 chunk) -> Boolean;
+
+	auto block_get_template (const RID& handle) const -> I32;
+	auto block_set_template (const RID& handle, I32 h) const -> Boolean;
 
 	public:
 

@@ -46,6 +46,20 @@ auto ChunkManager::handle_to_vector2i(const RID & handle) const -> Vector2i
 	return Vector2i { uhh.chunkIndex, uhh.blockIndex };
 }
 
+auto ChunkManager::handle_from_vector2i(const Vector2i & i) const -> RID
+{
+	return Handle2Block(i.x, i.y).toRID();
+}
+
+auto ChunkManager::handle_is_valid(const RID & handle) const -> Boolean
+{
+	auto uhh = Handle2Block(handle);
+	return (
+		(0 <= uhh.chunkIndex && uhh.chunkIndex < world.chunkCount) &&
+		(0 <= uhh.blockIndex && uhh.blockIndex < CHUNK_INNER_COUNT)
+	);
+}
+
 auto ChunkManager::get_chunk_by_location(const Vector3i & global) -> I32
 {
 	return world.tgGetChunkByLocation(global);
@@ -70,6 +84,18 @@ auto ChunkManager::point_in_local_chunk_bounds(const Vector3i & p) const -> Bool
 auto ChunkManager::point_pack(const Vector3i & p) const -> I64
 {
 	return world.tgvPack(p);
+}
+auto ChunkManager::point_pack_strict(const Vector3i & p) const -> I64
+{
+	return world.tgvPackStrict(p);
+}
+auto ChunkManager::point_pack_localized(const Vector3i & p) const -> I64
+{
+	return world.tgvPackLocal(p);
+}
+auto ChunkManager::point_pack_localized_adjacent(const Vector3i & p) const -> I64
+{
+	return world.tgvPackLocalAdjacent(p);
 }
 auto ChunkManager::point_unpack(I64 v) const -> Vector3i
 {
@@ -116,6 +142,32 @@ auto ChunkManager::chunk_remove_from_world(I32 chunk) -> Boolean
 	return world.tgResetChunkLocation(chunk);
 }
 
+auto ChunkManager::block_get_template(const RID & handle) const -> I32
+{
+	if (!handle_is_valid(handle))
+	{
+		return -1;
+	}
+	auto uhh = Handle2Block(handle);
+	return world.getBlockPointer(uhh)->templateHandle;
+}
+
+auto ChunkManager::block_set_template(const RID & handle, I32 h) const -> Boolean
+{
+	if (!handle_is_valid(handle))
+	{
+		return false;
+	}
+	auto* p = world.getBlockPointer(Handle2Block(handle));
+	auto pev = p->templateHandle;
+	if (pev == h)
+	{
+		return false;
+	}
+	p->templateHandle = h;
+	return true;
+}
+
 
 auto ChunkManager::_bind_methods() -> U0
 {
@@ -123,12 +175,29 @@ auto ChunkManager::_bind_methods() -> U0
 
 
 	ClassDB::bind_method(
+		D_METHOD("block_get_template", "handle"),
+		&ChunkManager::block_get_template
+	);
+	ClassDB::bind_method(
+		D_METHOD("block_set_template", "handle", "id"),
+		&ChunkManager::block_set_template
+	);
+	
+	ClassDB::bind_method(
+		D_METHOD("handle_is_valid", "handle"),
+		&ChunkManager::handle_is_valid
+	);
+	ClassDB::bind_method(
 		D_METHOD("handle_get_block", "handle"),
 		&ChunkManager::handle_get_block
 	);
 	ClassDB::bind_method(
 		D_METHOD("handle_get_chunk", "handle"),
 		&ChunkManager::handle_get_chunk
+	);
+	ClassDB::bind_method(
+		D_METHOD("handle_from_vector2i", "v"),
+		&ChunkManager::handle_from_vector2i
 	);
 	ClassDB::bind_method(
 		D_METHOD("handle_to_vector2i", "handle"),
@@ -190,6 +259,28 @@ auto ChunkManager::_bind_methods() -> U0
 		D_METHOD("point_remove_subchunk_part", "p"),
 		&ChunkManager::point_remove_subchunk_part
 	);
+
+	ClassDB::bind_method(
+		D_METHOD("point_pack", "p"),
+		&ChunkManager::point_pack
+	);
+	ClassDB::bind_method(
+		D_METHOD("point_pack_strict", "p"),
+		&ChunkManager::point_pack_strict
+	);
+	ClassDB::bind_method(
+		D_METHOD("point_pack_localized", "p"),
+		&ChunkManager::point_pack_localized
+	);
+	ClassDB::bind_method(
+		D_METHOD("point_pack_localized_adjacent", "p"),
+		&ChunkManager::point_pack_localized_adjacent
+	);
+	ClassDB::bind_method(
+		D_METHOD("point_unpack", "i"),
+		&ChunkManager::point_unpack
+	);
+
 	ClassDB::bind_method(
 		D_METHOD("get_chunk_count"),
 		&ChunkManager::get_chunk_count
